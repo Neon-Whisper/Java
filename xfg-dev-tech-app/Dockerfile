@@ -1,5 +1,5 @@
 # 基础镜像
-FROM openjdk:8-jre-slim
+FROM openjdk:17-jdk-slim
 
 # 作者
 MAINTAINER xiaofuge
@@ -12,6 +12,6 @@ ENV TZ=PRC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # 添加应用
-ADD target/group-buy-market-app.jar /group-buy-market-app.jar
+ADD target/ai-rag-knowledge-app.jar /ai-rag-knowledge-app.jar
 
 ENTRYPOINT ["sh","-c","java -jar $JAVA_OPTS /group-buy-market-app.jar $PARAMS"]
