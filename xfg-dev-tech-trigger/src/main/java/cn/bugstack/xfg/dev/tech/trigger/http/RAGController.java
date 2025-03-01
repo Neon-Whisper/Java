@@ -56,7 +56,7 @@ public class RAGController implements IRAGService {
 
     @RequestMapping(value = "file/upload", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
     @Override
-    public Response<String> uploadFile(@RequestParam String ragTag, @RequestParam("file") List<MultipartFile> files) {
+    public Response<String> uploadFile(@RequestParam("ragTag") String ragTag, @RequestParam("file") List<MultipartFile> files) {
         log.info("上传知识库开始 {}", ragTag);
         for (MultipartFile file : files) {
             TikaDocumentReader documentReader = new TikaDocumentReader(file.getResource());
@@ -80,7 +80,7 @@ public class RAGController implements IRAGService {
 
     @RequestMapping(value = "analyze_git_repository", method = RequestMethod.POST)
     @Override
-    public Response<String> analyzeGitRepository(@RequestParam String repoUrl, @RequestParam String userName, @RequestParam String token) throws Exception {
+    public Response<String> analyzeGitRepository(@RequestParam("repoUrl") String repoUrl, @RequestParam("userName") String userName, @RequestParam("token") String token) throws Exception {
         String localPath = "./git-cloned-repo";
         String repoProjectName = extractProjectName(repoUrl);
         log.info("克隆路径：{}", new File(localPath).getAbsolutePath());
