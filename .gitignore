@@ -40,3 +40,4 @@ build/
 /data/
 /xfg-dev-tech-app/data/
 /xfg-dev-tech-app/cloned-repo/
+/push_all_branches.sh
