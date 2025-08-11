@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: my_tlias
+  #mysql连接配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mytlias
+    username: root
+    password: 320923
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+pagehelper:
+  reasonable: true
+  helper-dialect: mysql

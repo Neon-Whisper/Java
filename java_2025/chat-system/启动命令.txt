@@ -1,0 +1,8 @@
+服务器
+java -cp target/chat-system-shaded.jar server.ChatServer 127.0.0.1 8888
+
+PC1
+java -cp target/chat-system-shaded.jar client.ChatClient -id PC1 -ip 127.0.0.1 -port 8888
+
+PC2
+java "-Djava.net.preferIPv6Addresses=true" "-Djava.net.preferIPv4Stack=false" -cp target/chat-system-shaded.jar client.ChatClient -id PC2 -ip ::1 -port 8888
