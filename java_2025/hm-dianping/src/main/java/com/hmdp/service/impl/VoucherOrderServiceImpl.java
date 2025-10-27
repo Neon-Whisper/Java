@@ -16,6 +16,7 @@ import com.hmdp.utils.UserHolder;
 
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.stream.*;
@@ -362,10 +363,45 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
 //        return Result.ok();
 //    }
 
-    //redis实现消息队列
+//    //redis实现消息队列
+//    @Transactional
+//    @Override
+//    public Result seckillVoucher(Long voucherId) {
+//        // 1、执行Lua脚本，判断用户是否具有秒杀资格
+//        Long result = null;
+//        long orderId = redisIdWorker.nextId("order");
+//        try {
+//            result = stringRedisTemplate.execute(
+//                    SECKILL_SCRIPT,
+//                    Collections.emptyList(),
+//                    voucherId.toString(),
+//                    UserHolder.getUser().getId().toString(),
+//                    String.valueOf(orderId)
+//            );
+//        } catch (Exception e) {
+//            log.error("Lua脚本执行失败");
+//            throw new RuntimeException(e);
+//        }
+//        if (result != null && !result.equals(0L)) {
+//            // result为1表示库存不足，result为2表示用户已下单
+//            int r = result.intValue();
+//            return Result.fail(r == 2 ? "不能重复下单" : "库存不足");
+//        }
+//
+//        // 索取锁成功，创建代理对象，使用代理对象调用第三方事务方法， 防止事务失效
+//        IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+//        this.proxy = proxy;
+//        return Result.ok();
+//    }
+
+    //rabbitMQ实现消息队列
+    @Resource
+    private RabbitTemplate rabbitTemplate;
+
     @Transactional
     @Override
-    public Result seckillVoucher(Long voucherId) {
+    public Result seckillVoucher(Long voucherId)
+    {
         // 1、执行Lua脚本，判断用户是否具有秒杀资格
         Long result = null;
         long orderId = redisIdWorker.nextId("order");
@@ -386,12 +422,15 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             int r = result.intValue();
             return Result.fail(r == 2 ? "不能重复下单" : "库存不足");
         }
+        VoucherOrder voucherOrder = new VoucherOrder();
+        voucherOrder.setId(orderId);
+        voucherOrder.setUserId(UserHolder.getUser().getId());
+        voucherOrder.setVoucherId(voucherId);
 
-        // 索取锁成功，创建代理对象，使用代理对象调用第三方事务方法， 防止事务失效
-        IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
-        this.proxy = proxy;
-        return Result.ok();
+        rabbitTemplate.convertAndSend("hmdianping.direct", "seckill.order", voucherOrder);
+        return Result.ok(orderId);
     }
+
 
     /**
      * 创建订单

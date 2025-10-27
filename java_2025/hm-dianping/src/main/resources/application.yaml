@@ -1,5 +1,6 @@
 server:
   port: 8081
+
 spring:
   application:
     name: hmdp
@@ -20,8 +21,22 @@ spring:
         time-between-eviction-runs: 10s
   jackson:
     default-property-inclusion: non_null # JSON处理时忽略非空字段
+  rabbitmq:
+    host: 127.0.0.1 # IP地址
+    port: 5672 # 端口号
+    username: hmdianping # 用户名
+    password: 123456 # 密码
+    virtual-host: /hmdianping
+    listener:
+      simple:
+        concurrency: 1
+        max-concurrency: 1
+        acknowledge-mode: manual
+        prefetch: 1
+
 mybatis-plus:
   type-aliases-package: com.hmdp.entity # 别名扫描包
+
 logging:
   level:
     com.hmdp: debug
