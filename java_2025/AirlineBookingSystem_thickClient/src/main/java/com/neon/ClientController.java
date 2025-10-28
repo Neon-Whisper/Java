@@ -4,34 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-//单体实现
-
-
-public class AirTicketClient {
-    private List<Airline> airlines;
-    private List<Flight> flights;
+public class ClientController {
+    private HttpClient httpClient;
+    private List<Flight> lastSearchResult;
     private List<Booking> bookings;
     private Scanner scanner;
 
-    // 初始化测试数据
-    public AirTicketClient() {
-        airlines = new ArrayList<>();
-        airlines.add(new Airline("CA", "中国国航", 0.05));
-        airlines.add(new Airline("MU", "东方航空", 0.03));
-
-        flights = new ArrayList<>();
-        flights.add(new Flight("CA1301", "北京", "上海", "08:00", "10:20",
-                "2025-10-28", 1200, airlines.get(0)));
-        flights.add(new Flight("MU5102", "北京", "上海", "09:30", "11:50",
-                "2025-10-28", 1100, airlines.get(1)));
-        flights.add(new Flight("CA1503", "北京", "上海", "14:00", "16:15",
-                "2025-10-28", 1050, airlines.get(0)));
-
-        bookings = new ArrayList<>();
-        scanner = new Scanner(System.in);
+    public ClientController() {
+        this.httpClient = new HttpClient();
+        this.bookings = new ArrayList<>();
+        this.scanner = new Scanner(System.in);
     }
 
-    // 主菜单
     public void showMainMenu() {
         while (true) {
             System.out.println("\n===== 航空订票系统 =====");
@@ -45,10 +29,10 @@ public class AirTicketClient {
 
             switch (choice) {
                 case 1:
-                    searchFlights(); // 先查询，保存结果供预订使用
+                    searchFlights();
                     break;
                 case 2:
-                    bookFlightFromSearch(); // 从查询结果中预订
+                    bookFlightFromSearch();
                     break;
                 case 3:
                     cancelBooking();
@@ -62,10 +46,6 @@ public class AirTicketClient {
         }
     }
 
-    // 存储查询结果（供预订用例调用）
-    private List<Flight> lastSearchResult;
-
-    // 1. 查询航班（结果保存到lastSearchResult）
     private void searchFlights() {
         System.out.println("\n===== 查询航班 =====");
         System.out.println("正在请求服务器数据");
@@ -81,14 +61,11 @@ public class AirTicketClient {
         int count = scanner.nextInt();
         scanner.nextLine();
 
-        // 筛选航班
-        lastSearchResult = new ArrayList<>();
-        for (Flight f : flights) {
-            if (f.getDepCity().equals(depCity) && f.getArrCity().equals(arrCity)
-                    && f.getDate().equals(date) && f.getRemainingSeats() >= count) {
-                lastSearchResult.add(f);
-            }
-        }
+        // 请求服务器数据
+        lastSearchResult = httpClient.searchFlights(depCity, arrCity, date);
+
+        // 筛选满足座位要求的航班
+        lastSearchResult.removeIf(f -> f.getRemainingSeats() < count);
 
         // 排序
         if (sortType == 1) {
@@ -113,7 +90,6 @@ public class AirTicketClient {
         System.out.println("可选择以上航班进行预订（请选择功能2）");
     }
 
-    // 2. 预订行程（完整子用例流程）
     private void bookFlightFromSearch() {
         // 检查是否有查询结果
         if (lastSearchResult == null || lastSearchResult.isEmpty()) {
@@ -190,34 +166,27 @@ public class AirTicketClient {
                 chosenSeats,
                 finalFare
         );
-        bookings.add(booking);
 
-        System.out.println("\n正在发送订单至服务器");
-        // 打印收据
-        System.out.println("\n===== 预订成功！收据如下 =====");
-        booking.printReceipt();
+        // 发送预订请求到服务器
+        if (httpClient.createBooking(booking)) {
+            System.out.println("\n正在发送订单至服务器");
+            // 打印收据
+            System.out.println("\n===== 预订成功！收据如下 =====");
+            booking.printReceipt();
+        } else {
+            System.out.println("预订失败！");
+        }
     }
 
-    // 3. 取消预订
     private void cancelBooking() {
         System.out.print("请输入预订编号：");
         String bookingId = scanner.nextLine();
         System.out.println("正在请求服务器");
-        for (Booking b : bookings) {
-            if (b.getBookingId().equals(bookingId)) {
-                // 释放座位
-                for (Seat s : b.getSeats()) {
-                    s.setEmpty(true);
-                }
-                bookings.remove(b);
-                System.out.println("预订已取消！");
-                return;
-            }
-        }
-        System.out.println("未找到该预订！");
-    }
 
-    public static void main(String[] args) {
-        new AirTicketClient().showMainMenu();
+        if (httpClient.cancelBooking(bookingId)) {
+            System.out.println("预订已取消！");
+        } else {
+            System.out.println("未找到该预订！");
+        }
     }
 }
