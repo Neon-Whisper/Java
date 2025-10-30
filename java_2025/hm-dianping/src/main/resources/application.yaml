@@ -33,6 +33,12 @@ spring:
         max-concurrency: 1
         acknowledge-mode: manual
         prefetch: 1
+        retry:
+          enabled: true # 开启消费者失败重试
+          initial-interval: 1000ms # 初识的失败等待时长为1秒
+          multiplier: 1 # 失败的等待时长倍数，下次等待时长 = multiplier * last-interval
+          max-attempts: 3 # 最大重试次数
+          stateless: true # true无状态；false有状态。如果业务中包含事务，这里改为false
 
 mybatis-plus:
   type-aliases-package: com.hmdp.entity # 别名扫描包
@@ -40,3 +46,15 @@ mybatis-plus:
 logging:
   level:
     com.hmdp: debug
+
+hmdp:
+  jwt:
+    #    # 设置jwt签名加密时使用的秘钥
+    #    admin-secret-key: itcast
+    #    # 设置jwt过期时间
+    #    admin-ttl: 7200000
+    #    # 设置前端传递过来的令牌名称
+    #    admin-token-name: token
+    user-secret-key: ThisIsA32BytesLongSecretKeyForHS256
+    user-ttl: 7200000
+    user-token-name: authorization

@@ -1,5 +1,6 @@
 package com.hmdp.config;
 
+import com.hmdp.properties.JwtProperties;
 import com.hmdp.utils.LoginInterceptor;
 import com.hmdp.utils.RefreshTokenInterceptor;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,9 @@ public class MvcConfig implements WebMvcConfigurer {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
+    @Resource
+    private JwtProperties jwtProperties;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 登录拦截器
@@ -29,8 +33,9 @@ public class MvcConfig implements WebMvcConfigurer {
                         "/index",
                         "/voucher/**"
                 ).order(1);
-        //  刷新令牌拦截器
-        registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate))
-                .addPathPatterns("/**").order(0);
+//        //  刷新令牌拦截器
+//        registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate))
+//                .addPathPatterns("/**").order(0);
+        registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate,jwtProperties)).addPathPatterns("/**").order(0); //拦截所有请求
     }
 }

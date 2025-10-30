@@ -3,21 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.neon</groupId>
+        <artifactId>javaDesignMode</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-    <groupId>com.neon</groupId>
-    <artifactId>javaDesignMode</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <modules>
-        <module>work2</module>
-        <module>work2-2</module>
-        <module>work3</module>
-        <module>work4</module>
-        <module>work5</module>
-        <module>experiment1</module>
-        <module>Work6</module>
-        <module>exprtiment3</module>
-    </modules>
+    <artifactId>exprtiment3</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

@@ -22,5 +22,12 @@ public class RabbitMQTest {
         assertNotNull("RabbitTemplate should not be null", rabbitTemplate);
         rabbitTemplate.convertAndSend("hmdianping.direct","seckill.order","测试发送消息");
     }
+
+    // 在测试类中添加清理方法
+    @Test
+    public void clearQueue() {
+        // 发送一个正确的 VoucherOrder 对象，或者清理队列
+        rabbitTemplate.receiveAndConvert("seckill.order.queue");
+    }
 }
 
