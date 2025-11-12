@@ -1,236 +1,45 @@
-25-11-11.11:35:27.821 [main            ] INFO  Application            - Starting Application using Java 17.0.14 with PID 346632 (D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge\dev-tech-app\target\classes started by 晚风NEON in D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge)
-25-11-11.11:35:27.823 [main            ] INFO  Application            - The following 1 profile is active: "dev"
-25-11-11.11:35:28.579 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-25-11-11.11:35:28.582 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-25-11-11.11:35:28.608 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
-25-11-11.11:35:29.285 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port 8090 (http)
-25-11-11.11:35:29.296 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8090"]
-25-11-11.11:35:29.298 [main            ] INFO  StandardService        - Starting service [Tomcat]
-25-11-11.11:35:29.298 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/10.1.19]
-25-11-11.11:35:29.362 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
-25-11-11.11:35:29.362 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1349 ms
-25-11-11.11:35:29.957 [main            ] INFO  Version                - Redisson 3.44.0
-25-11-11.11:35:33.306 [main            ] WARN  AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'redissonClient' defined in class path resource [com/neon/dev/tech/config/RedisClientConfig.class]: Failed to instantiate [org.redisson.api.RedissonClient]: Factory method 'redissonClient' threw exception with message: java.util.concurrent.ExecutionException: org.redisson.client.RedisConnectionException: Unable to connect to Redis server: localhost/127.0.0.1:16379
-25-11-11.11:35:33.308 [main            ] INFO  StandardService        - Stopping service [Tomcat]
-25-11-11.11:35:33.321 [main            ] INFO  ConditionEvaluationReportLogger - 
-
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-25-11-11.11:35:33.335 [main            ] ERROR SpringApplication      - Application run failed
-org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'redissonClient' defined in class path resource [com/neon/dev/tech/config/RedisClientConfig.class]: Failed to instantiate [org.redisson.api.RedissonClient]: Factory method 'redissonClient' threw exception with message: java.util.concurrent.ExecutionException: org.redisson.client.RedisConnectionException: Unable to connect to Redis server: localhost/127.0.0.1:16379
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:651)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:639)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1335)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1165)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:959)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
-	at com.neon.dev.tech.Application.main(Application.java:11)
-Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.redisson.api.RedissonClient]: Factory method 'redissonClient' threw exception with message: java.util.concurrent.ExecutionException: org.redisson.client.RedisConnectionException: Unable to connect to Redis server: localhost/127.0.0.1:16379
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:177)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:647)
-	... 19 common frames omitted
-Caused by: org.redisson.client.RedisConnectionException: java.util.concurrent.ExecutionException: org.redisson.client.RedisConnectionException: Unable to connect to Redis server: localhost/127.0.0.1:16379
-	at org.redisson.connection.MasterSlaveConnectionManager.doConnect(MasterSlaveConnectionManager.java:227)
-	at org.redisson.connection.MasterSlaveConnectionManager.connect(MasterSlaveConnectionManager.java:187)
-	at org.redisson.connection.ConnectionManager.create(ConnectionManager.java:98)
-	at org.redisson.Redisson.<init>(Redisson.java:67)
-	at org.redisson.Redisson.create(Redisson.java:110)
-	at com.neon.dev.tech.config.RedisClientConfig.redissonClient(RedisClientConfig.java:39)
-	at com.neon.dev.tech.config.RedisClientConfig$$SpringCGLIB$$0.CGLIB$redissonClient$0(<generated>)
-	at com.neon.dev.tech.config.RedisClientConfig$$SpringCGLIB$$FastClass$$1.invoke(<generated>)
-	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:258)
-	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:331)
-	at com.neon.dev.tech.config.RedisClientConfig$$SpringCGLIB$$0.redissonClient(<generated>)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:140)
-	... 20 common frames omitted
-Caused by: java.util.concurrent.ExecutionException: org.redisson.client.RedisConnectionException: Unable to connect to Redis server: localhost/127.0.0.1:16379
-	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
-	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2096)
-	at org.redisson.connection.MasterSlaveConnectionManager.doConnect(MasterSlaveConnectionManager.java:222)
-	... 35 common frames omitted
-Caused by: org.redisson.client.RedisConnectionException: Unable to connect to Redis server: localhost/127.0.0.1:16379
-	at org.redisson.connection.ConnectionsHolder.lambda$createConnection$2(ConnectionsHolder.java:167)
-	at java.base/java.util.concurrent.CompletableFuture.uniHandle(CompletableFuture.java:934)
-	at java.base/java.util.concurrent.CompletableFuture$UniHandle.tryFire(CompletableFuture.java:911)
-	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:510)
-	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2162)
-	at org.redisson.connection.ConnectionsHolder.lambda$createConnection$5(ConnectionsHolder.java:181)
-	at java.base/java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:863)
-	at java.base/java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:841)
-	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:510)
-	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2162)
-	at org.redisson.client.RedisClient$2$2.run(RedisClient.java:325)
-	at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:173)
-	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:166)
-	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:470)
-	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:569)
-	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
-	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
-	at java.base/java.lang.Thread.run(Thread.java:842)
-Caused by: java.util.concurrent.CompletionException: io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: no further information: localhost/127.0.0.1:16379
-	at java.base/java.util.concurrent.CompletableFuture.encodeRelay(CompletableFuture.java:368)
-	at java.base/java.util.concurrent.CompletableFuture.completeRelay(CompletableFuture.java:377)
-	at java.base/java.util.concurrent.CompletableFuture$UniRelay.tryFire(CompletableFuture.java:1097)
-	... 11 common frames omitted
-Caused by: io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: no further information: localhost/127.0.0.1:16379
-Caused by: java.net.ConnectException: Connection refused: no further information
-	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
-	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
-	at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:946)
-	at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:337)
-	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:335)
-	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:776)
-	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
-	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
-	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
-	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
-	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
-	at java.base/java.lang.Thread.run(Thread.java:842)
-25-11-11.11:38:55.284 [main            ] INFO  Application            - Starting Application using Java 17.0.14 with PID 348996 (D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge\dev-tech-app\target\classes started by 晚风NEON in D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge)
-25-11-11.11:38:55.286 [main            ] INFO  Application            - The following 1 profile is active: "dev"
-25-11-11.11:38:56.123 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-25-11-11.11:38:56.126 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-25-11-11.11:38:56.164 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 16 ms. Found 0 Redis repository interfaces.
-25-11-11.11:38:56.951 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port 8090 (http)
-25-11-11.11:38:56.963 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8090"]
-25-11-11.11:38:56.965 [main            ] INFO  StandardService        - Starting service [Tomcat]
-25-11-11.11:38:56.965 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/10.1.19]
-25-11-11.11:38:57.035 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
-25-11-11.11:38:57.035 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1543 ms
-25-11-11.11:38:57.722 [main            ] INFO  Version                - Redisson 3.44.0
-25-11-11.11:38:58.137 [redisson-netty-1-5] INFO  ConnectionsHolder      - 1 connections initialized for localhost/127.0.0.1:16379
-25-11-11.11:38:58.164 [redisson-netty-1-14] INFO  ConnectionsHolder      - 5 connections initialized for localhost/127.0.0.1:16379
-25-11-11.11:38:58.590 [main            ] WARN  AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'openAiChatClient' defined in class path resource [org/springframework/ai/autoconfigure/openai/OpenAiAutoConfiguration.class]: Failed to instantiate [org.springframework.ai.openai.OpenAiChatClient]: Factory method 'openAiChatClient' threw exception with message: OpenAI API key must be set
-25-11-11.11:38:58.602 [main            ] INFO  StandardService        - Stopping service [Tomcat]
-25-11-11.11:38:58.617 [main            ] INFO  ConditionEvaluationReportLogger - 
-
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-25-11-11.11:38:58.632 [main            ] ERROR SpringApplication      - Application run failed
-org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'openAiChatClient' defined in class path resource [org/springframework/ai/autoconfigure/openai/OpenAiAutoConfiguration.class]: Failed to instantiate [org.springframework.ai.openai.OpenAiChatClient]: Factory method 'openAiChatClient' threw exception with message: OpenAI API key must be set
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:651)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:639)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1335)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1165)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:959)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
-	at com.neon.dev.tech.Application.main(Application.java:11)
-Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.ai.openai.OpenAiChatClient]: Factory method 'openAiChatClient' threw exception with message: OpenAI API key must be set
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:177)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:647)
-	... 19 common frames omitted
-Caused by: java.lang.IllegalArgumentException: OpenAI API key must be set
-	at org.springframework.util.Assert.hasText(Assert.java:240)
-	at org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration.openAiApi(OpenAiAutoConfiguration.java:96)
-	at org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration.openAiChatClient(OpenAiAutoConfiguration.java:64)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:140)
-	... 20 common frames omitted
-25-11-11.11:40:16.078 [main            ] INFO  Application            - Starting Application using Java 17.0.14 with PID 345716 (D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge\dev-tech-app\target\classes started by 晚风NEON in D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge)
-25-11-11.11:40:16.080 [main            ] INFO  Application            - The following 1 profile is active: "dev"
-25-11-11.11:40:16.851 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-25-11-11.11:40:16.854 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-25-11-11.11:40:16.890 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
-25-11-11.11:40:17.596 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port 8090 (http)
-25-11-11.11:40:17.606 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8090"]
-25-11-11.11:40:17.607 [main            ] INFO  StandardService        - Starting service [Tomcat]
-25-11-11.11:40:17.607 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/10.1.19]
-25-11-11.11:40:17.674 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
-25-11-11.11:40:17.674 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1405 ms
-25-11-11.11:40:18.303 [main            ] INFO  Version                - Redisson 3.44.0
-25-11-11.11:40:18.627 [redisson-netty-1-5] INFO  ConnectionsHolder      - 1 connections initialized for localhost/127.0.0.1:16379
-25-11-11.11:40:18.646 [redisson-netty-1-14] INFO  ConnectionsHolder      - 5 connections initialized for localhost/127.0.0.1:16379
-25-11-11.11:40:19.053 [main            ] WARN  AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'openAiChatClient' defined in class path resource [org/springframework/ai/autoconfigure/openai/OpenAiAutoConfiguration.class]: Failed to instantiate [org.springframework.ai.openai.OpenAiChatClient]: Factory method 'openAiChatClient' threw exception with message: OpenAI API key must be set
-25-11-11.11:40:19.065 [main            ] INFO  StandardService        - Stopping service [Tomcat]
-25-11-11.11:40:19.079 [main            ] INFO  ConditionEvaluationReportLogger - 
-
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-25-11-11.11:40:19.095 [main            ] ERROR SpringApplication      - Application run failed
-org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'openAiChatClient' defined in class path resource [org/springframework/ai/autoconfigure/openai/OpenAiAutoConfiguration.class]: Failed to instantiate [org.springframework.ai.openai.OpenAiChatClient]: Factory method 'openAiChatClient' threw exception with message: OpenAI API key must be set
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:651)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:639)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1335)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1165)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:959)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
-	at com.neon.dev.tech.Application.main(Application.java:11)
-Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.ai.openai.OpenAiChatClient]: Factory method 'openAiChatClient' threw exception with message: OpenAI API key must be set
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:177)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:647)
-	... 19 common frames omitted
-Caused by: java.lang.IllegalArgumentException: OpenAI API key must be set
-	at org.springframework.util.Assert.hasText(Assert.java:240)
-	at org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration.openAiApi(OpenAiAutoConfiguration.java:96)
-	at org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration.openAiChatClient(OpenAiAutoConfiguration.java:64)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:140)
-	... 20 common frames omitted
-25-11-11.11:46:32.402 [main            ] INFO  Application            - Starting Application using Java 17.0.14 with PID 352952 (D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge\dev-tech-app\target\classes started by 晚风NEON in D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge)
-25-11-11.11:46:32.405 [main            ] INFO  Application            - The following 1 profile is active: "dev"
-25-11-11.11:46:32.989 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-25-11-11.11:46:32.992 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-25-11-11.11:46:33.020 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
-25-11-11.11:46:33.421 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port 8090 (http)
-25-11-11.11:46:33.430 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8090"]
-25-11-11.11:46:33.432 [main            ] INFO  StandardService        - Starting service [Tomcat]
-25-11-11.11:46:33.432 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/10.1.19]
-25-11-11.11:46:33.486 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
-25-11-11.11:46:33.486 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1045 ms
-25-11-11.11:46:34.062 [main            ] INFO  Version                - Redisson 3.44.0
-25-11-11.11:46:34.383 [redisson-netty-1-5] INFO  ConnectionsHolder      - 1 connections initialized for localhost/127.0.0.1:16379
-25-11-11.11:46:34.402 [redisson-netty-1-14] INFO  ConnectionsHolder      - 5 connections initialized for localhost/127.0.0.1:16379
-25-11-11.11:46:35.034 [main            ] INFO  Http11NioProtocol      - Starting ProtocolHandler ["http-nio-8090"]
-25-11-11.11:46:35.043 [main            ] INFO  TomcatWebServer        - Tomcat started on port 8090 (http) with context path ''
-25-11-11.11:46:35.050 [main            ] INFO  Application            - Started Application in 3.273 seconds (process running for 3.941)
-25-11-11.11:46:51.700 [http-nio-8090-exec-1] INFO  [/]                    - Initializing Spring DispatcherServlet 'dispatcherServlet'
-25-11-11.11:46:51.701 [http-nio-8090-exec-1] INFO  DispatcherServlet      - Initializing Servlet 'dispatcherServlet'
-25-11-11.11:46:51.702 [http-nio-8090-exec-1] INFO  DispatcherServlet      - Completed initialization in 1 ms
+25-11-12.20:05:37.107 [main            ] INFO  Application            - Starting Application using Java 17.0.14 with PID 21592 (D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge\dev-tech-app\target\classes started by 晚风NEON in D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge)
+25-11-12.20:05:37.108 [main            ] INFO  Application            - The following 1 profile is active: "dev"
+25-11-12.20:05:37.598 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+25-11-12.20:05:37.599 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+25-11-12.20:05:37.630 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+25-11-12.20:05:37.990 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port 8090 (http)
+25-11-12.20:05:37.998 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8090"]
+25-11-12.20:05:38.000 [main            ] INFO  StandardService        - Starting service [Tomcat]
+25-11-12.20:05:38.000 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/10.1.19]
+25-11-12.20:05:38.052 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
+25-11-12.20:05:38.052 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 909 ms
+25-11-12.20:05:38.525 [main            ] INFO  Version                - Redisson 3.44.0
+25-11-12.20:05:38.809 [redisson-netty-1-6] INFO  ConnectionsHolder      - 1 connections initialized for localhost/127.0.0.1:16379
+25-11-12.20:05:38.825 [redisson-netty-1-14] INFO  ConnectionsHolder      - 5 connections initialized for localhost/127.0.0.1:16379
+25-11-12.20:05:39.392 [main            ] INFO  Http11NioProtocol      - Starting ProtocolHandler ["http-nio-8090"]
+25-11-12.20:05:39.402 [main            ] INFO  TomcatWebServer        - Tomcat started on port 8090 (http) with context path ''
+25-11-12.20:05:39.408 [main            ] INFO  Application            - Started Application in 2.813 seconds (process running for 3.544)
+25-11-12.20:06:02.585 [http-nio-8090-exec-1] INFO  [/]                    - Initializing Spring DispatcherServlet 'dispatcherServlet'
+25-11-12.20:06:02.585 [http-nio-8090-exec-1] INFO  DispatcherServlet      - Initializing Servlet 'dispatcherServlet'
+25-11-12.20:06:02.587 [http-nio-8090-exec-1] INFO  DispatcherServlet      - Completed initialization in 1 ms
+25-11-12.21:32:44.112 [main            ] INFO  Application            - Starting Application using Java 17.0.14 with PID 29892 (D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge\dev-tech-app\target\classes started by 晚风NEON in D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge)
+25-11-12.21:32:44.115 [main            ] INFO  Application            - The following 1 profile is active: "dev"
+25-11-12.21:32:44.698 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+25-11-12.21:32:44.701 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+25-11-12.21:32:44.726 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+25-11-12.21:32:45.379 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port 8090 (http)
+25-11-12.21:32:45.389 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8090"]
+25-11-12.21:32:45.391 [main            ] INFO  StandardService        - Starting service [Tomcat]
+25-11-12.21:32:45.391 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/10.1.19]
+25-11-12.21:32:45.459 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
+25-11-12.21:32:45.459 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1311 ms
+25-11-12.21:32:46.081 [main            ] INFO  Version                - Redisson 3.44.0
+25-11-12.21:32:46.395 [redisson-netty-1-5] INFO  ConnectionsHolder      - 1 connections initialized for localhost/127.0.0.1:16379
+25-11-12.21:32:46.414 [redisson-netty-1-14] INFO  ConnectionsHolder      - 5 connections initialized for localhost/127.0.0.1:16379
+25-11-12.21:32:46.817 [main            ] INFO  HikariDataSource       - HikariCP - Starting...
+25-11-12.21:32:46.969 [main            ] INFO  HikariPool             - HikariCP - Added connection org.postgresql.jdbc.PgConnection@5a69b3cf
+25-11-12.21:32:46.970 [main            ] INFO  HikariDataSource       - HikariCP - Start completed.
+25-11-12.21:32:48.493 [main            ] INFO  Http11NioProtocol      - Starting ProtocolHandler ["http-nio-8090"]
+25-11-12.21:32:48.503 [main            ] INFO  TomcatWebServer        - Tomcat started on port 8090 (http) with context path ''
+25-11-12.21:32:48.511 [main            ] INFO  Application            - Started Application in 4.934 seconds (process running for 5.575)
+25-11-12.21:33:08.637 [http-nio-8090-exec-1] INFO  [/]                    - Initializing Spring DispatcherServlet 'dispatcherServlet'
+25-11-12.21:33:08.637 [http-nio-8090-exec-1] INFO  DispatcherServlet      - Initializing Servlet 'dispatcherServlet'
+25-11-12.21:33:08.638 [http-nio-8090-exec-1] INFO  DispatcherServlet      - Completed initialization in 1 ms
+25-11-12.21:37:34.239 [SpringApplicationShutdownHook] INFO  HikariDataSource       - HikariCP - Shutdown initiated...
+25-11-12.21:37:34.241 [SpringApplicationShutdownHook] INFO  HikariDataSource       - HikariCP - Shutdown completed.
