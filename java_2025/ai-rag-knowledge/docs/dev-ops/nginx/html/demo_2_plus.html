@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI助手对话</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .message-animation {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .streaming-cursor::after {
+            content: '▋';
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .message-bubble-user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        .message-bubble-ai {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
+            box-shadow: 0 4px 15px rgba(148, 163, 184, 0.2);
+        }
+        .input-glow {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        .send-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .send-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        .send-button:active {
+            transform: translateY(0);
+        }
+        .typing-indicator {
+            display: none;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 18px;
+            margin-bottom: 16px;
+            width: fit-content;
+            box-shadow: 0 4px 15px rgba(148, 163, 184, 0.1);
+        }
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #667eea;
+            margin: 0 2px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        .header-glow {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen flex">
+<!-- 左侧聊天列表 -->
+<aside class="w-64 glass-effect m-4 rounded-2xl shadow-xl flex flex-col">
+    <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+        <h2 class="text-lg font-bold text-gray-700">聊天列表</h2>
+        <button id="newChatBtn" class="px-3 py-1 rounded-lg gradient-bg text-white text-sm hover:opacity-90">新建</button>
+    </div>
+    <ul id="chatList" class="flex-1 overflow-y-auto p-2 space-y-2 scrollbar-hide">
+        <!-- 动态插入聊天项 -->
+    </ul>
+</aside>
+
+<!-- 主对话区域 -->
+<div class="flex-1 flex flex-col">
+    <div class="container mx-auto max-w-4xl flex-1 flex flex-col p-4">
+        <header class="gradient-bg text-white p-6 rounded-t-3xl shadow-2xl">
+            <h1 class="text-3xl font-bold header-glow">🤖 AI智能助手</h1>
+            <p class="text-purple-100 mt-2">基于 qwen 模型 · 流式对话</p>
+        </header>
+
+        <main class="flex-1 glass-effect rounded-b-3xl shadow-xl overflow-hidden">
+            <div id="chatContainer" class="h-full flex flex-col">
+                <div id="messagesList" class="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-hide">
+                    <div class="message-animation flex justify-start">
+                        <div class="message-bubble-ai rounded-2xl px-6 py-4 max-w-3xl">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">AI</div>
+                                <div>
+                                    <p class="font-semibold text-purple-700 mb-1">AI助手</p>
+                                    <p class="text-gray-700">你好！我是你的AI助手，有什么可以帮助你的吗？</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="typingIndicator" class="typing-indicator message-animation">
+                    <span></span><span></span><span></span>
+                </div>
+
+                <div class="p-6 border-t border-gray-100 bg-gradient-to-r from-white to-gray-50">
+                    <form id="chatForm" class="flex space-x-4">
+                        <input type="text" id="messageInput" placeholder="输入你的消息..." class="flex-1 px-6 py-4 border border-gray-200 rounded-2xl focus:outline-none input-glow transition-all duration-300 text-gray-700 placeholder-gray-400" autocomplete="off">
+                        <button type="button" id="uploadBtn" class="px-4 py-4 rounded-2xl bg-gradient-to-br from-green-400 to-blue-500 text-white shadow-lg hover:shadow-xl transition">上传</button>
+                        <button type="submit" id="sendButton" class="send-button text-white px-8 py-4 rounded-2xl font-semibold flex items-center space-x-2 shadow-lg">
+                            <span>发送</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                        </button>
+                    </form>
+                    <div class="mt-3 flex items-center justify-between text-sm text-gray-500">
+                        <span>💡 提示：支持流式实时对话</span>
+                        <span id="modelInfo" class="text-purple-600 font-medium">模型: qwen2.5:7b</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 上传弹窗 -->
+<div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="glass-effect rounded-2xl p-6 w-96 shadow-2xl">
+        <h3 class="text-lg font-bold mb-4 text-gray-700">上传知识库</h3>
+        <input id="ragTagInput" type="text" placeholder="知识库名称" class="w-full mb-3 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-300">
+        <input id="fileInput" type="file" multiple accept=".md,.txt,.sql" class="mb-4 w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-purple-100 file:text-purple-700 hover:file:bg-purple-200">
+        <div class="flex justify-end space-x-3">
+            <button id="cancelUpload" class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">取消</button>
+            <button id="confirmUpload" class="px-4 py-2 rounded-lg gradient-bg text-white hover:opacity-90">上传</button>
+        </div>
+    </div>
+</div>
+
+<!-- 重命名弹窗 -->
+<div id="renameModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="glass-effect rounded-2xl p-6 w-80 shadow-2xl">
+        <h3 class="text-lg font-bold mb-4 text-gray-700">重命名聊天</h3>
+        <input id="renameInput" type="text" placeholder="新名称" class="w-full mb-4 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-300">
+        <div class="flex justify-end space-x-3">
+            <button id="cancelRename" class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">取消</button>
+            <button id="confirmRename" class="px-4 py-2 rounded-lg gradient-bg text-white hover:opacity-90">保存</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE_URL = 'http://localhost:8090/api/v1/ollama';
+    const MODEL_NAME = 'qwen2.5:7b';
+
+    let currentEventSource = null;
+    let currentAiMessageElement = null;
+    let isStreaming = false;
+    let chats = JSON.parse(localStorage.getItem('chats') || '[]');
+    let activeChatId = localStorage.getItem('activeChatId') || null;
+    let currentRagTag = null;  // 存储当前RAG标签
+
+    const chatForm = document.getElementById('chatForm');
+    const messageInput = document.getElementById('messageInput');
+    const messagesList = document.getElementById('messagesList');
+    const sendButton = document.getElementById('sendButton');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const chatList = document.getElementById('chatList');
+    const newChatBtn = document.getElementById('newChatBtn');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const uploadModal = document.getElementById('uploadModal');
+    const renameModal = document.getElementById('renameModal');
+    const ragTagInput = document.getElementById('ragTagInput');
+    const fileInput = document.getElementById('fileInput');
+    const renameInput = document.getElementById('renameInput');
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function updateSendButton(disabled) {
+        sendButton.disabled = disabled;
+        sendButton.innerHTML = disabled
+            ? `<span>思考中</span><svg class="animate-spin w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`
+            : `<span>发送</span><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>`;
+        sendButton.classList.toggle('opacity-70', disabled);
+    }
+
+    function renderChatList() {
+        chatList.innerHTML = '';
+        chats.forEach(chat => {
+            const li = document.createElement('li');
+            li.className = `flex items-center justify-between p-2 rounded-lg cursor-pointer ${chat.id === activeChatId ? 'bg-purple-100' : 'hover:bg-gray-100'}`;
+            li.innerHTML = `
+                    <span class="chat-name flex-1 truncate" data-id="${chat.id}">${escapeHtml(chat.name)}</span>
+                    <div class="flex space-x-1">
+                        <button class="rename-btn text-xs text-blue-500 hover:underline" data-id="${chat.id}">重命名</button>
+                        <button class="delete-btn text-xs text-red-500 hover:underline" data-id="${chat.id}">删除</button>
+                    </div>
+                `;
+            li.querySelector('.chat-name').addEventListener('click', () => switchChat(chat.id));
+            li.querySelector('.rename-btn').addEventListener('click', e => {
+                e.stopPropagation();
+                openRename(chat.id);
+            });
+            li.querySelector('.delete-btn').addEventListener('click', e => {
+                e.stopPropagation();
+                deleteChat(chat.id);
+            });
+            chatList.appendChild(li);
+        });
+    }
+
+    function switchChat(id) {
+        activeChatId = id;
+        localStorage.setItem('activeChatId', id);
+        renderChatList();
+        loadMessages();
+    }
+
+    function loadMessages() {
+        messagesList.innerHTML = `
+                <div class="message-animation flex justify-start">
+                    <div class="message-bubble-ai rounded-2xl px-6 py-4 max-w-3xl">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">AI</div>
+                            <div>
+                                <p class="font-semibold text-purple-700 mb-1">AI助手</p>
+                                <p class="text-gray-700">你好！我是你的AI助手，有什么可以帮助你的吗？</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        const chat = chats.find(c => c.id === activeChatId);
+        if (chat && chat.messages) {
+            chat.messages.forEach(msg => {
+                if (msg.role === 'user') addUserMessage(msg.content, false);
+                else addAiMessage(msg.content, false);
+            });
+        }
+    }
+
+    function addUserMessage(message, save = true) {
+        const div = document.createElement('div');
+        div.className = 'message-animation flex justify-end';
+        div.innerHTML = `
+                <div class="message-bubble-user rounded-2xl px-6 py-4 max-w-3xl">
+                    <div class="flex items-start space-x-3">
+                        <div>
+                            <p class="font-semibold text-white/90 mb-1">你</p>
+                            <p class="text-white">${escapeHtml(message)}</p>
+                        </div>
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            `;
+        messagesList.appendChild(div);
+        messagesList.scrollTop = messagesList.scrollHeight;
+        if (save) saveMessage('user', message);
+    }
+
+    function addAiMessage(content, save = true) {
+        const div = document.createElement('div');
+        div.className = 'message-animation flex justify-start';
+        div.innerHTML = `
+                <div class="message-bubble-ai rounded-2xl px-6 py-4 max-w-3xl">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">AI</div>
+                        <div>
+                            <p class="font-semibold text-purple-700 mb-1">AI助手</p>
+                            <p class="text-gray-700">${escapeHtml(content)}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        messagesList.appendChild(div);
+        messagesList.scrollTop = messagesList.scrollHeight;
+        if (save) saveMessage('assistant', content);
+    }
+
+    function saveMessage(role, content) {
+        const chat = chats.find(c => c.id === activeChatId);
+        if (chat) {
+            chat.messages = chat.messages || [];
+            chat.messages.push({ role, content });
+            localStorage.setItem('chats', JSON.stringify(chats));
+        }
+    }
+
+    function newChat() {
+        const id = Date.now().toString();
+        chats.unshift({ id, name: `新聊天 ${chats.length + 1}`, messages: [] });
+        localStorage.setItem('chats', JSON.stringify(chats));
+        renderChatList();
+        switchChat(id);
+    }
+
+    function deleteChat(id) {
+        chats = chats.filter(c => c.id !== id);
+        localStorage.setItem('chats', JSON.stringify(chats));
+        if (id === activeChatId) {
+            activeChatId = chats[0]?.id || null;
+            localStorage.setItem('activeChatId', activeChatId);
+            loadMessages();
+        }
+        renderChatList();
+    }
+
+    function openRename(id) {
+        renameInput.dataset.id = id;
+        renameInput.value = chats.find(c => c.id === id)?.name || '';
+        renameModal.classList.remove('hidden');
+        renameModal.classList.add('flex');
+    }
+
+    function closeRename() {
+        renameModal.classList.add('hidden');
+        renameModal.classList.remove('flex');
+    }
+
+    function handleRename() {
+        const id = renameInput.dataset.id;
+        const name = renameInput.value.trim();
+        if (!name) return;
+        const chat = chats.find(c => c.id === id);
+        if (chat) {
+            chat.name = name;
+            localStorage.setItem('chats', JSON.stringify(chats));
+            renderChatList();
+            closeRename();
+        }
+    }
+
+    function openUpload() {
+        uploadModal.classList.remove('hidden');
+        uploadModal.classList.add('flex');
+    }
+
+    function closeUpload() {
+        uploadModal.classList.add('hidden');
+        uploadModal.classList.remove('flex');
+        ragTagInput.value = '';
+        fileInput.value = '';
+    }
+
+    async function handleUpload() {
+        const ragTag = ragTagInput.value.trim();
+        const files = fileInput.files;
+        if (!ragTag || files.length === 0) return alert('请填写知识库名称并选择文件');
+        const formData = new FormData();
+        formData.append('ragTag', ragTag);
+        Array.from(files).forEach(f => formData.append('file', f));
+        try {
+            const res = await fetch(`${API_BASE_URL}/file/upload`, { method: 'POST', body: formData });
+            const json = await res.json();
+            if (json.code === '0000') {
+                alert('上传成功');
+                currentRagTag = ragTag;
+                // 更新界面提示
+                const modelInfo = document.getElementById('modelInfo');
+                modelInfo.innerHTML = `模型: ${MODEL_NAME} | RAG模式: ${ragTag}`;
+                closeUpload();
+            } else {
+                alert('上传失败：' + json.info);
+            }
+        } catch (e) {
+            alert('上传出错：' + e.message);
+        }
+    }
+
+    function showTypingIndicator() {
+        typingIndicator.style.display = 'block';
+        messagesList.scrollTop = messagesList.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+        typingIndicator.style.display = 'none';
+    }
+
+    function closeStream() {
+        isStreaming = false;
+        updateSendButton(false);
+        if (currentEventSource) {
+            currentEventSource.close();
+            currentEventSource = null;
+        }
+        if (currentAiMessageElement) {
+            currentAiMessageElement.classList.remove('streaming-cursor');
+            currentAiMessageElement = null;
+        }
+    }
+
+    function handleStream(message) {
+        if (isStreaming) return;
+        isStreaming = true;
+        updateSendButton(true);
+        addUserMessage(message);
+        messageInput.value = '';
+
+        const div = document.createElement('div');
+        div.className = 'message-animation flex justify-start';
+        const aiId = 'ai_' + Date.now();
+        div.innerHTML = `
+                <div class="message-bubble-ai rounded-2xl px-6 py-4 max-w-3xl">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">AI</div>
+                        <div>
+                            <p class="font-semibold text-purple-700 mb-1">AI助手</p>
+                            <p id="${aiId}" class="text-gray-700 streaming-cursor"></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        messagesList.appendChild(div);
+        messagesList.scrollTop = messagesList.scrollHeight;
+        currentAiMessageElement = document.getElementById(aiId);
+
+        const encodedMessage = encodeURIComponent(message);
+        let apiUrl;
+        if (currentRagTag) {
+            // 使用RAG模式
+            apiUrl = `${API_BASE_URL}/generate_stream_rag?model=${MODEL_NAME}&ragTag=${encodeURIComponent(currentRagTag)}&message=${encodedMessage}`;
+        } else {
+            // 普通模式
+            apiUrl = `${API_BASE_URL}/generate_stream?model=${MODEL_NAME}&message=${encodedMessage}`;
+        }
+        currentEventSource = new EventSource(apiUrl);
+
+        currentEventSource.onopen = () => console.log('SSE connected');
+
+        currentEventSource.onmessage = event => {
+            try {
+                const data = JSON.parse(event.data);
+                const content = data?.result?.output?.content || '';
+                const finishReason = data?.result?.metadata?.finishReason;
+                if (content && currentAiMessageElement) {
+                    currentAiMessageElement.textContent += content;
+                    messagesList.scrollTop = messagesList.scrollHeight;
+                }
+                if (finishReason === 'STOP') {
+                    console.log('SSE finished');
+                    closeStream();
+                    const final = currentAiMessageElement?.textContent || '';
+                    if (final) saveMessage('assistant', final);
+                }
+            } catch (e) {
+                console.error('SSE parse error:', e);
+            }
+        };
+
+        currentEventSource.onerror = err => {
+            console.error('SSE error:', err);
+            if (currentAiMessageElement && currentAiMessageElement.textContent.trim() === '') {
+                currentAiMessageElement.textContent = '抱歉，发生了错误，请稍后重试。';
+            }
+            closeStream();
+        };
+    }
+
+    chatForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const msg = messageInput.value.trim();
+        if (!msg || isStreaming) return;
+        handleStream(msg);
+    });
+
+    messageInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            chatForm.dispatchEvent(new Event('submit'));
+        }
+    });
+
+    newChatBtn.addEventListener('click', newChat);
+    uploadBtn.addEventListener('click', openUpload);
+    confirmUpload.addEventListener('click', handleUpload);
+    cancelUpload.addEventListener('click', closeUpload);
+    confirmRename.addEventListener('click', handleRename);
+    cancelRename.addEventListener('click', closeRename);
+
+    window.addEventListener('beforeunload', closeStream);
+
+    renderChatList();
+    if (activeChatId) switchChat(activeChatId);
+    else if (chats.length === 0) newChat();
+    messageInput.focus();
+</script>
+</body>
+</html>

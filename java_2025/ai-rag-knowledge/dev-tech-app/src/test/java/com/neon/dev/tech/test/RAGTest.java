@@ -42,7 +42,7 @@ public class RAGTest {
 
     @Test
     public void upload() {
-        TikaDocumentReader reader = new TikaDocumentReader("./data/file.text");
+        TikaDocumentReader reader = new TikaDocumentReader("data/file.txt");
 
         List<Document> documents = reader.get();
         List<Document> documentSplitterList = tokenTextSplitter.apply(documents);
@@ -78,7 +78,7 @@ public class RAGTest {
         messages.add(new UserMessage(message));
         messages.add(ragMessage);
 
-        ChatResponse chatResponse = ollamaChatClient.call(new Prompt(messages, OllamaOptions.create().withModel("deepseek-r1:1.5b")));
+        ChatResponse chatResponse = ollamaChatClient.call(new Prompt(messages, OllamaOptions.create().withModel("qwen2.5:7b")));
 
         log.info("测试结果:{}", JSON.toJSONString(chatResponse));
 

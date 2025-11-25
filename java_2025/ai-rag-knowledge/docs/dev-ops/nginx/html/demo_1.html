@@ -116,7 +116,7 @@
     <!-- 头部 -->
     <header class="gradient-bg text-white p-6 rounded-t-3xl shadow-2xl">
         <h1 class="text-3xl font-bold header-glow">🤖 AI智能助手</h1>
-        <p class="text-purple-100 mt-2">基于 DeepSeek R1 模型 · 流式对话</p>
+        <p class="text-purple-100 mt-2">基于 qwen2.5 模型 · 流式对话</p>
     </header>
 
     <!-- 对话区域 -->
@@ -170,7 +170,7 @@
                 </form>
                 <div class="mt-3 flex items-center justify-between text-sm text-gray-500">
                     <span>💡 提示：支持流式实时对话</span>
-                    <span id="modelInfo" class="text-purple-600 font-medium">模型: deepseek-r1:1.5b</span>
+                    <span id="modelInfo" class="text-purple-600 font-medium">模型: qwen2.5:7b</span>
                 </div>
             </div>
         </div>
@@ -179,7 +179,7 @@
 
 <script>
     const API_BASE_URL = 'http://localhost:8090/api/v1/ollama';
-    const MODEL_NAME = 'deepseek-r1:1.5b';
+    const MODEL_NAME = 'qwen2.5:7b';
 
     let currentEventSource = null;
     let currentAiMessageElement = null;

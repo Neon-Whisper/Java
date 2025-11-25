@@ -1,20 +1,20 @@
-# docker-compose -f docker-compose-environment-aliyun.yml up -d
+# docker-comopse -f docker-compose-environment.yml up -d
 version: '3'
 services:
   # 对话模型
-  # ollama pull deepseek-r1:1.5b
+  # ollama pull qwen2.5:7b
   # 运行模型
-  # ollama run deepseek-r1:1.5b
+  # ollama run qwen2.5:7b
   # 联网模型
   # ollama pull nomic-embed-text
   ollama:
-    image: registry.cn-hangzhou.aliyuncs.com/xfg-studio/ollama:0.5.10
+    image: ollama/ollama:0.5.10
     container_name: ollama
     restart: unless-stopped
     ports:
       - "11434:11434"
   redis:
-    image: registry.cn-hangzhou.aliyuncs.com/xfg-studio/redis:6.2
+    image: redis:6.2
     container_name: redis
     restart: always
     hostname: redis
@@ -34,7 +34,7 @@ services:
   # RedisAdmin https://github.com/joeferner/redis-commander
   # 账密 admin/admin
   redis-admin:
-    image: registry.cn-hangzhou.aliyuncs.com/xfg-studio/redis-commander:0.8.0
+    image: spryker/redis-commander:0.8.0
     container_name: redis-admin
     hostname: redis-commander
     restart: always
@@ -54,13 +54,13 @@ services:
         condition: service_healthy
 
   vector_db:
-    image: registry.cn-hangzhou.aliyuncs.com/xfg-studio/pgvector:v0.5.0
+    image: pgvector/pgvector:v0.5.0
     container_name: vector_db
     restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=ai-rag-knowledge
+      - POSTGRES_DB=springai
       - PGPASSWORD=postgres
     volumes:
       - ./pgvector/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -69,9 +69,9 @@ services:
         max-size: 10m
         max-file: "3"
     ports:
-      - '15432:5432'
+      - '5432:5432'
     healthcheck:
-      test: "pg_isready -U postgres -d ai-rag-knowledge"
+      test: "pg_isready -U postgres -d vector_store"
       interval: 2s
       timeout: 20s
       retries: 10

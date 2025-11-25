@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI对话助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .message-streaming {
+            background: linear-gradient(90deg, #f3f4f6, #e5e7eb, #f3f4f6);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 12px;
+            margin: -8px -12px;
+            padding: 8px 12px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .chat-list-item.active {
+            background-color: #eff6ff;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen flex">
+<!-- 左侧聊天列表 -->
+<div id="chatListPanel" class="w-64 bg-white border-r border-gray-200 flex flex-col h-full">
+    <div class="p-4 border-b border-gray-200">
+        <button id="newChatBtn" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md flex items-center justify-center">
+            <i class="fas fa-plus mr-2"></i> 新建聊天
+        </button>
+    </div>
+    <div class="flex-1 overflow-y-auto scrollbar-thin">
+        <ul id="chatList" class="py-2">
+            <!-- 聊天列表项将通过JS动态生成 -->
+        </ul>
+    </div>
+</div>
+
+<!-- 右侧主内容区域 -->
+<div class="flex-1 flex flex-col h-full">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white border-b border-gray-200 py-3 px-6 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+            <button id="toggleChatList" class="md:hidden text-gray-600 hover:text-gray-900">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+            <h1 class="text-xl font-semibold text-gray-800">AI对话助手</h1>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <!-- 模型选择 -->
+            <div class="relative">
+                <select id="modelSelect" class="bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="qwen2.5:7b">qwen2.5:7b</option>
+                    <option value="gpt-4o">gpt-4o</option>
+                </select>
+            </div>
+
+            <!-- RAG知识库选择 -->
+            <div class="relative">
+                <select id="ragSelect" class="bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">不使用RAG</option>
+                    <!-- RAG选项将通过JS动态生成 -->
+                </select>
+            </div>
+
+            <!-- 上传知识库下拉菜单 -->
+            <div class="relative" id="uploadDropdown">
+                <button id="uploadToggle" class="bg-white border border-gray-300 rounded-md py-2 px-4 text-sm flex items-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <i class="fas fa-upload mr-2"></i> 上传知识
+                    <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                </button>
+
+                <!-- 下拉菜单内容 -->
+                <div id="uploadMenu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                    <div class="py-1">
+                        <button id="uploadFileBtn" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                            <i class="fas fa-file-upload mr-2"></i> 上传文件
+                        </button>
+                        <button id="analyzeGitBtn" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                            <i class="fab fa-git-alt mr-2"></i> 解析Git仓库
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 对话区域 -->
+    <main class="flex-1 overflow-y-auto p-6 scrollbar-thin" id="chatContainer">
+        <!-- 对话消息将通过JS动态生成 -->
+        <div id="welcomeMessage" class="flex flex-col items-center justify-center h-full text-center text-gray-500">
+            <i class="fas fa-robot text-6xl mb-4 text-blue-500"></i>
+            <h2 class="text-2xl font-semibold mb-2">欢迎使用AI对话助手</h2>
+            <p class="max-w-md">选择一个模型开始对话，或使用RAG功能基于您的知识库获取更准确的回答。</p>
+        </div>
+    </main>
+
+    <!-- 输入区域 -->
+    <footer class="bg-white border-t border-gray-200 p-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex items-end space-x-2">
+                <div class="flex-1 bg-white border border-gray-300 rounded-lg shadow-sm overflow-hidden">
+                    <textarea id="messageInput" rows="2" class="w-full px-4 py-3 focus:outline-none resize-none" placeholder="输入一条消息..."></textarea>
+                </div>
+                <button id="sendBtn" class="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="mt-2 text-xs text-gray-500 text-center">
+                按 Enter 发送，Shift + Enter 换行
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- 上传文件模态框 -->
+<div id="uploadFileModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-20">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">上传文件到知识库</h3>
+        </div>
+        <div class="p-6">
+            <div class="mb-4">
+                <label for="ragTagInput" class="block text-sm font-medium text-gray-700 mb-1">知识库标签</label>
+                <input type="text" id="ragTagInput" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="输入知识库标签">
+            </div>
+            <div class="mb-4">
+                <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-1">选择文件</label>
+                <input type="file" id="fileInput" multiple class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            </div>
+        </div>
+        <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
+            <button id="cancelUploadFile" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                取消
+            </button>
+            <button id="confirmUploadFile" class="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                上传
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 解析Git仓库模态框 -->
+<div id="analyzeGitModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-20">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">解析Git仓库</h3>
+        </div>
+        <div class="p-6">
+            <div class="mb-4">
+                <label for="repoUrl" class="block text-sm font-medium text-gray-700 mb-1">仓库URL</label>
+                <input type="text" id="repoUrl" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://github.com/username/repository.git">
+            </div>
+            <div class="mb-4">
+                <label for="userName" class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
+                <input type="text" id="userName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Git用户名">
+            </div>
+            <div class="mb-4">
+                <label for="token" class="block text-sm font-medium text-gray-700 mb-1">访问令牌</label>
+                <input type="password" id="token" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Git访问令牌">
+            </div>
+        </div>
+        <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
+            <button id="cancelAnalyzeGit" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                取消
+            </button>
+            <button id="confirmAnalyzeGit" class="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                解析
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 聊天操作菜单 -->
+<div id="chatMenu" class="absolute bg-white rounded-md shadow-lg border border-gray-200 py-1 z-10 hidden">
+    <button class="rename-chat w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+        <i class="fas fa-edit mr-2"></i> 重命名
+    </button>
+    <button class="delete-chat w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center">
+        <i class="fas fa-trash mr-2"></i> 删除
+    </button>
+</div>
+
+<script>
+    // 全局变量
+    let chats = JSON.parse(localStorage.getItem('aiChats')) || [];
+    let currentChatId = null;
+    let activeEventSource = null;
+    let ragTags = [];
+
+    // DOM元素
+    const chatListPanel = document.getElementById('chatListPanel');
+    const chatList = document.getElementById('chatList');
+    const toggleChatList = document.getElementById('toggleChatList');
+    const newChatBtn = document.getElementById('newChatBtn');
+    const chatContainer = document.getElementById('chatContainer');
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const modelSelect = document.getElementById('modelSelect');
+    const ragSelect = document.getElementById('ragSelect');
+    const uploadToggle = document.getElementById('uploadToggle');
+    const uploadMenu = document.getElementById('uploadMenu');
+    const uploadFileBtn = document.getElementById('uploadFileBtn');
+    const analyzeGitBtn = document.getElementById('analyzeGitBtn');
+    const uploadFileModal = document.getElementById('uploadFileModal');
+    const analyzeGitModal = document.getElementById('analyzeGitModal');
+    const cancelUploadFile = document.getElementById('cancelUploadFile');
+    const confirmUploadFile = document.getElementById('confirmUploadFile');
+    const cancelAnalyzeGit = document.getElementById('cancelAnalyzeGit');
+    const confirmAnalyzeGit = document.getElementById('confirmAnalyzeGit');
+    const chatMenu = document.getElementById('chatMenu');
+
+    // 初始化应用
+    function initApp() {
+        renderChatList();
+        loadRagTags(); // 改为异步加载
+
+        // 如果有聊天记录，选择第一个
+        if (chats.length > 0) {
+            selectChat(chats[0].id);
+        }
+
+        // 设置事件监听器
+        setupEventListeners();
+    }
+
+    // 设置事件监听器
+    function setupEventListeners() {
+        // 切换聊天列表显示
+        toggleChatList.addEventListener('click', () => {
+            chatListPanel.classList.toggle('hidden');
+            chatListPanel.classList.toggle('md:flex');
+        });
+
+        // 新建聊天
+        newChatBtn.addEventListener('click', createNewChat);
+
+        // 发送消息
+        sendBtn.addEventListener('click', sendMessage);
+
+        // 输入框快捷键
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // 上传知识库下拉菜单
+        uploadToggle.addEventListener('click', () => {
+            uploadMenu.classList.toggle('hidden');
+        });
+
+        // 关闭上传菜单当点击其他地方时
+        document.addEventListener('click', (e) => {
+            if (!uploadDropdown.contains(e.target)) {
+                uploadMenu.classList.add('hidden');
+            }
+        });
+
+        // 上传文件
+        uploadFileBtn.addEventListener('click', () => {
+            uploadMenu.classList.add('hidden');
+            uploadFileModal.classList.remove('hidden');
+        });
+
+        // 解析Git仓库
+        analyzeGitBtn.addEventListener('click', () => {
+            uploadMenu.classList.add('hidden');
+            analyzeGitModal.classList.remove('hidden');
+        });
+
+        // 关闭模态框
+        cancelUploadFile.addEventListener('click', () => {
+            uploadFileModal.classList.add('hidden');
+        });
+
+        confirmUploadFile.addEventListener('click', uploadFiles);
+
+        cancelAnalyzeGit.addEventListener('click', () => {
+            analyzeGitModal.classList.add('hidden');
+        });
+
+        confirmAnalyzeGit.addEventListener('click', analyzeGitRepository);
+
+        // 关闭模态框当点击背景时
+        [uploadFileModal, analyzeGitModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        });
+    }
+
+    // 创建新聊天
+    function createNewChat() {
+        const chatId = 'chat_' + Date.now();
+        const chatName = '新聊天 ' + (chats.length + 1);
+
+        const newChat = {
+            id: chatId,
+            name: chatName,
+            messages: [],
+            model: modelSelect.value,
+            createdAt: new Date().toISOString()
+        };
+
+        chats.unshift(newChat);
+        saveChats();
+        renderChatList();
+        selectChat(chatId);
+    }
+
+    // 选择聊天
+    function selectChat(chatId) {
+        currentChatId = chatId;
+
+        // 更新聊天列表的激活状态
+        document.querySelectorAll('.chat-list-item').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        document.querySelector(`[data-chat-id="${chatId}"]`).classList.add('active');
+
+        // 显示聊天消息
+        renderChatMessages(chatId);
+
+        // 隐藏欢迎消息
+        welcomeMessage.classList.add('hidden');
+    }
+
+    // 渲染聊天列表
+    function renderChatList() {
+        chatList.innerHTML = '';
+
+        if (chats.length === 0) {
+            chatList.innerHTML = `
+                    <div class="px-4 py-3 text-center text-gray-500 text-sm">
+                        暂无聊天记录
+                    </div>
+                `;
+            return;
+        }
+
+        chats.forEach(chat => {
+            const chatItem = document.createElement('li');
+            chatItem.className = 'chat-list-item px-4 py-3 cursor-pointer border-b border-gray-100 hover:bg-gray-50';
+            chatItem.dataset.chatId = chat.id;
+
+            chatItem.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="font-medium truncate">${chat.name}</div>
+                        <button class="chat-menu-btn text-gray-400 hover:text-gray-600 p-1 rounded">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1 truncate">
+                        ${chat.messages.length > 0 ?
+                chat.messages[chat.messages.length - 1].content.substring(0, 30) + '...' :
+                '暂无消息'}
+                    </div>
+                `;
+
+            chatItem.addEventListener('click', (e) => {
+                if (!e.target.closest('.chat-menu-btn')) {
+                    selectChat(chat.id);
+                }
+            });
+
+            const menuBtn = chatItem.querySelector('.chat-menu-btn');
+            menuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showChatMenu(chat.id, menuBtn);
+            });
+
+            chatList.appendChild(chatItem);
+        });
+    }
+
+    // 显示聊天操作菜单
+    function showChatMenu(chatId, button) {
+        // 隐藏其他菜单
+        document.querySelectorAll('.chat-menu').forEach(menu => {
+            menu.classList.add('hidden');
+        });
+
+        // 设置菜单位置
+        const rect = button.getBoundingClientRect();
+        chatMenu.style.top = `${rect.bottom + window.scrollY}px`;
+        chatMenu.style.left = `${rect.left + window.scrollX}px`;
+
+        // 显示菜单
+        chatMenu.classList.remove('hidden');
+
+        // 设置菜单事件
+        const renameBtn = chatMenu.querySelector('.rename-chat');
+        const deleteBtn = chatMenu.querySelector('.delete-chat');
+
+        // 移除旧的事件监听器
+        renameBtn.replaceWith(renameBtn.cloneNode(true));
+        deleteBtn.replaceWith(deleteBtn.cloneNode(true));
+
+        // 获取新的按钮元素
+        const newRenameBtn = chatMenu.querySelector('.rename-chat');
+        const newDeleteBtn = chatMenu.querySelector('.delete-chat');
+
+        // 添加新的事件监听器
+        newRenameBtn.addEventListener('click', () => {
+            renameChat(chatId);
+            chatMenu.classList.add('hidden');
+        });
+
+        newDeleteBtn.addEventListener('click', () => {
+            deleteChat(chatId);
+            chatMenu.classList.add('hidden');
+        });
+
+        // 点击其他地方隐藏菜单
+        document.addEventListener('click', function hideMenu(e) {
+            if (!chatMenu.contains(e.target) && e.target !== button) {
+                chatMenu.classList.add('hidden');
+                document.removeEventListener('click', hideMenu);
+            }
+        });
+    }
+
+    // 重命名聊天
+    function renameChat(chatId) {
+        const chat = chats.find(c => c.id === chatId);
+        if (!chat) return;
+
+        const newName = prompt('请输入新的聊天名称:', chat.name);
+        if (newName && newName.trim() !== '') {
+            chat.name = newName.trim();
+            saveChats();
+            renderChatList();
+        }
+    }
+
+    // 删除聊天
+    function deleteChat(chatId) {
+        if (confirm('确定要删除这个聊天吗？')) {
+            chats = chats.filter(c => c.id !== chatId);
+            saveChats();
+            renderChatList();
+
+            if (currentChatId === chatId) {
+                currentChatId = null;
+                if (chats.length > 0) {
+                    selectChat(chats[0].id);
+                } else {
+                    welcomeMessage.classList.remove('hidden');
+                    chatContainer.innerHTML = '';
+                }
+            }
+        }
+    }
+
+    // 渲染聊天消息
+    function renderChatMessages(chatId) {
+        const chat = chats.find(c => c.id === chatId);
+        if (!chat) return;
+
+        chatContainer.innerHTML = '';
+
+        chat.messages.forEach(message => {
+            addMessageToChat(message, false);
+        });
+
+        // 滚动到底部
+        scrollToBottom();
+    }
+
+    // 发送消息
+    function sendMessage() {
+        const message = messageInput.value.trim();
+        if (!message || !currentChatId) return;
+
+        // 获取当前聊天
+        const chat = chats.find(c => c.id === currentChatId);
+        if (!chat) return;
+
+        // 添加用户消息
+        const userMessage = {
+            id: 'msg_' + Date.now(),
+            role: 'user',
+            content: message,
+            timestamp: new Date().toISOString()
+        };
+
+        chat.messages.push(userMessage);
+        saveChats();
+        addMessageToChat(userMessage, false);
+
+        // 清空输入框
+        messageInput.value = '';
+
+        // 添加AI消息占位符
+        const aiMessageId = 'msg_' + Date.now() + '_ai';
+        const aiMessage = {
+            id: aiMessageId,
+            role: 'assistant',
+            content: '',
+            timestamp: new Date().toISOString(),
+            streaming: true
+        };
+
+        chat.messages.push(aiMessage);
+        addMessageToChat(aiMessage, true);
+
+        // 调用API
+        callStreamingAPI(message, aiMessageId, chat);
+    }
+
+    // 调用流式API
+    function callStreamingAPI(message, messageId, chat) {
+        if (activeEventSource) {
+            activeEventSource.close();
+        }
+
+        const model = modelSelect.value;
+        const ragTag = ragSelect.value;
+
+        let apiUrl;
+        const baseUrl = 'http://localhost:8090';
+
+        if (ragTag) {
+            apiUrl = `${baseUrl}/api/v1/${model.includes('gpt') ? 'openai' : 'ollama'}/generate_stream_rag?model=${encodeURIComponent(model)}&ragTag=${encodeURIComponent(ragTag)}&message=${encodeURIComponent(message)}`;
+        } else {
+            apiUrl = `${baseUrl}/api/v1/${model.includes('gpt') ? 'openai' : 'ollama'}/generate_stream?model=${encodeURIComponent(model)}&message=${encodeURIComponent(message)}`;
+        }
+
+        console.log('API URL:', apiUrl);
+
+        activeEventSource = new EventSource(apiUrl);
+        let fullContent = '';
+
+        activeEventSource.onmessage = function(event) {
+            try {
+                console.log('SSE数据:', event.data); // 调试日志
+
+                // 检查是否是空数据或结束标记
+                if (!event.data || event.data === '[DONE]') {
+                    activeEventSource.close();
+                    activeEventSource = null;
+                    finishMessageStreaming(messageId, fullContent);
+                    return;
+                }
+
+                const data = JSON.parse(event.data);
+
+                // 检查是否有内容
+                if (data.result && data.result.output && data.result.output.content !== undefined) {
+                    fullContent += data.result.output.content || '';
+                    updateMessageContent(messageId, fullContent);
+                }
+
+                // 检查是否结束
+                if (data.result && data.result.metadata && data.result.metadata.finishReason === 'STOP') {
+                    console.log('收到STOP信号，结束流式传输');
+                    activeEventSource.close();
+                    activeEventSource = null;
+                    finishMessageStreaming(messageId, fullContent);
+                }
+            } catch (error) {
+                console.error('解析SSE数据错误:', error);
+            }
+        };
+
+        activeEventSource.onerror = function(event) {
+            console.error('SSE连接错误:', event);
+            activeEventSource.close();
+            activeEventSource = null;
+
+            if (!fullContent) {
+                updateMessageContent(messageId, '抱歉，发生了错误，请稍后重试。');
+                finishMessageStreaming(messageId, '抱歉，发生了错误，请稍后重试。');
+            } else {
+                // 如果有部分内容，也要结束流式传输
+                finishMessageStreaming(messageId, fullContent);
+            }
+        };
+    }
+
+    // 添加消息到聊天界面
+    function addMessageToChat(message, isStreaming) {
+        const messageElement = document.createElement('div');
+        messageElement.id = message.id;
+        messageElement.className = `mb-6 ${message.role === 'user' ? 'text-right' : ''}`;
+
+        // 如果是流式消息，添加闪烁背景
+        if (isStreaming) {
+            messageElement.classList.add('message-streaming');
+        }
+
+        const messageBubbleClass = message.role === 'user'
+            ? 'bg-blue-500 text-white'
+            : 'bg-gray-100 text-gray-800';
+
+        messageElement.innerHTML = `
+        <div class="max-w-3xl mx-auto">
+            <div class="flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}">
+                <div class="flex ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'} items-start space-x-2 max-w-full">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full ${message.role === 'user' ? 'bg-blue-500' : 'bg-gray-300'} flex items-center justify-center text-white">
+                        <i class="fas ${message.role === 'user' ? 'fa-user' : 'fa-robot'} text-sm"></i>
+                    </div>
+                    <div class="${messageBubbleClass} rounded-2xl px-4 py-3 max-w-full relative z-10">
+                        <div class="message-content">${formatMessage(message.content)}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-xs text-gray-500 mt-1 ${message.role === 'user' ? 'text-right' : 'text-left'} px-12">
+                ${formatTime(message.timestamp)}
+            </div>
+        </div>
+    `;
+
+        chatContainer.appendChild(messageElement);
+        scrollToBottom();
+    }
+
+    // 更新消息内容
+    function updateMessageContent(messageId, content) {
+        const messageElement = document.getElementById(messageId);
+        if (messageElement) {
+            const contentElement = messageElement.querySelector('.message-content');
+            if (contentElement) {
+                contentElement.innerHTML = formatMessage(content) + '<span class="message-streaming-cursor"></span>';
+            }
+
+            // 重要：实时更新存储的消息内容
+            const chat = chats.find(c => c.id === currentChatId);
+            if (chat) {
+                const message = chat.messages.find(m => m.id === messageId);
+                if (message) {
+                    message.content = content;
+                    // 不立即保存，避免频繁写入localStorage
+                }
+            }
+
+            scrollToBottom();
+        }
+    }
+
+    // 完成消息流式传输
+    function finishMessageStreaming(messageId, content) {
+        const messageElement = document.getElementById(messageId);
+        if (messageElement) {
+            // 重要：移除闪烁背景
+            messageElement.classList.remove('message-streaming');
+
+            // 更新聊天记录
+            const chat = chats.find(c => c.id === currentChatId);
+            if (chat) {
+                const message = chat.messages.find(m => m.id === messageId);
+                if (message) {
+                    message.content = content;
+                    message.streaming = false;
+                    saveChats();
+                }
+            }
+        }
+    }
+
+    // 保存聊天记录（添加防抖）
+    function saveChats() {
+        // 使用防抖避免频繁写入
+        if (this.saveTimeout) {
+            clearTimeout(this.saveTimeout);
+        }
+        this.saveTimeout = setTimeout(() => {
+            localStorage.setItem('aiChats', JSON.stringify(chats));
+            console.log('聊天记录已保存'); // 调试日志
+        }, 500);
+    }
+
+    // 格式化消息内容
+    function formatMessage(content) {
+        if (!content) return '';
+
+        // 简单的Markdown格式化
+        return content
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/`(.*?)`/g, '<code class="bg-gray-200 px-1 rounded">$1</code>')
+            .replace(/\n/g, '<br>');
+    }
+
+    // 格式化时间
+    function formatTime(timestamp) {
+        const date = new Date(timestamp);
+        return date.toLocaleTimeString('zh-CN', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    // 滚动到底部
+    function scrollToBottom() {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+
+    // 加载RAG标签 - 调用真实接口
+    async function loadRagTags() {
+        try {
+            const response = await fetch('http://localhost:8090/api/v1/rag/query_rag_tag_list');
+            const result = await response.json();
+
+            if (result.code === '0000') {
+                ragTags = result.data || [];
+                renderRagTags();
+            } else {
+                console.error('获取RAG标签失败:', result.info);
+                ragTags = [];
+                renderRagTags();
+            }
+        } catch (error) {
+            console.error('获取RAG标签错误:', error);
+            // 如果接口失败，使用空数组
+            ragTags = [];
+            renderRagTags();
+        }
+    }
+
+    // 渲染RAG标签
+    function renderRagTags() {
+        ragSelect.innerHTML = '<option value="">不使用RAG</option>';
+
+        ragTags.forEach(tag => {
+            const option = document.createElement('option');
+            option.value = tag;
+            option.textContent = tag;
+            ragSelect.appendChild(option);
+        });
+    }
+
+    // 上传文件 - 调用真实接口
+    async function uploadFiles() {
+        const ragTag = document.getElementById('ragTagInput').value.trim();
+        const fileInput = document.getElementById('fileInput');
+
+        if (!ragTag) {
+            alert('请输入知识库标签');
+            return;
+        }
+
+        if (fileInput.files.length === 0) {
+            alert('请选择至少一个文件');
+            return;
+        }
+
+        // 创建FormData
+        const formData = new FormData();
+        formData.append('ragTag', ragTag);
+
+        // 添加所有文件
+        for (let i = 0; i < fileInput.files.length; i++) {
+            formData.append('files', fileInput.files[i]);
+        }
+
+        uploadFileModal.classList.add('hidden');
+        showNotification('文件上传中...', 'info');
+
+        try {
+            const response = await fetch('http://localhost:8090/api/v1/rag/file/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.code === '0000') {
+                showNotification('文件上传成功', 'success');
+
+                // 重新加载RAG标签列表
+                await loadRagTags();
+
+                // 选择新上传的标签
+                setTimeout(() => {
+                    ragSelect.value = ragTag;
+                }, 100);
+
+            } else {
+                showNotification(`上传失败: ${result.info}`, 'error');
+            }
+
+        } catch (error) {
+            console.error('上传文件错误:', error);
+            showNotification('上传失败，请检查网络连接', 'error');
+        }
+
+        // 清空表单
+        document.getElementById('ragTagInput').value = '';
+        document.getElementById('fileInput').value = '';
+    }
+
+    // 解析Git仓库 - 调用真实接口
+    async function analyzeGitRepository() {
+        const repoUrl = document.getElementById('repoUrl').value.trim();
+        const userName = document.getElementById('userName').value.trim();
+        const token = document.getElementById('token').value.trim();
+
+        if (!repoUrl || !userName || !token) {
+            alert('请填写所有字段');
+            return;
+        }
+
+        analyzeGitModal.classList.add('hidden');
+        showNotification('正在解析Git仓库...', 'info');
+
+        try {
+            const formData = new FormData();
+            formData.append('repoUrl', repoUrl);
+            formData.append('userName', userName);
+            formData.append('token', token);
+
+            const response = await fetch('http://localhost:8090/api/v1/rag/analyze_git_repository', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.code === '0000') {
+                showNotification('Git仓库解析成功', 'success');
+
+                // 重新加载RAG标签列表
+                await loadRagTags();
+
+                // 提取项目名称并选择
+                const projectName = extractProjectName(repoUrl);
+                setTimeout(() => {
+                    ragSelect.value = projectName;
+                }, 100);
+
+            } else {
+                showNotification(`解析失败: ${result.info}`, 'error');
+            }
+
+        } catch (error) {
+            console.error('解析Git仓库错误:', error);
+            showNotification('解析失败，请检查网络连接', 'error');
+        }
+
+        // 清空表单
+        document.getElementById('repoUrl').value = '';
+        document.getElementById('userName').value = '';
+        document.getElementById('token').value = '';
+    }
+
+    // 提取项目名称
+    function extractProjectName(repoUrl) {
+        const parts = repoUrl.split('/');
+        const projectNameWithGit = parts[parts.length - 1];
+        return projectNameWithGit.replace('.git', '');
+    }
+
+    // 显示通知
+    function showNotification(message, type) {
+        // 创建通知元素
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-30 ${
+            type === 'success' ? 'bg-green-500 text-white' :
+                type === 'error' ? 'bg-red-500 text-white' :
+                    'bg-blue-500 text-white'
+        }`;
+        notification.textContent = message;
+
+        // 添加到页面
+        document.body.appendChild(notification);
+
+        // 3秒后移除
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    // 初始化应用
+    document.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>

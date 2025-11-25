@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "D:\\BaiduSyncdisk\\code\\java\\java_2025\\ai-mcp-knowledge\\mcp-test",
+        "D:\\BaiduSyncdisk\\code\\java\\java_2025\\ai-mcp-knowledge\\mcp-test"
+      ]
+    },
+    "mcp-server-computer": {
+      "command": "java",
+      "args": [
+        "-Dspring.ai.mcp.server.stdio=true",
+        "-jar",
+        "D:\\BaiduSyncdisk\\code\\java\\java_2025\\ai-mcp-knowledge\\mcp-server-computer\\target\\mcp-server-computer-1.0.0.jar"
+      ]
+    }
+  }
+}
+

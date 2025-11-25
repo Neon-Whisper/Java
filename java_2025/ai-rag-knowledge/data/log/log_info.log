@@ -1,45 +1,25 @@
-25-11-12.20:05:37.107 [main            ] INFO  Application            - Starting Application using Java 17.0.14 with PID 21592 (D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge\dev-tech-app\target\classes started by 晚风NEON in D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge)
-25-11-12.20:05:37.108 [main            ] INFO  Application            - The following 1 profile is active: "dev"
-25-11-12.20:05:37.598 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-25-11-12.20:05:37.599 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-25-11-12.20:05:37.630 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
-25-11-12.20:05:37.990 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port 8090 (http)
-25-11-12.20:05:37.998 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8090"]
-25-11-12.20:05:38.000 [main            ] INFO  StandardService        - Starting service [Tomcat]
-25-11-12.20:05:38.000 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/10.1.19]
-25-11-12.20:05:38.052 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
-25-11-12.20:05:38.052 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 909 ms
-25-11-12.20:05:38.525 [main            ] INFO  Version                - Redisson 3.44.0
-25-11-12.20:05:38.809 [redisson-netty-1-6] INFO  ConnectionsHolder      - 1 connections initialized for localhost/127.0.0.1:16379
-25-11-12.20:05:38.825 [redisson-netty-1-14] INFO  ConnectionsHolder      - 5 connections initialized for localhost/127.0.0.1:16379
-25-11-12.20:05:39.392 [main            ] INFO  Http11NioProtocol      - Starting ProtocolHandler ["http-nio-8090"]
-25-11-12.20:05:39.402 [main            ] INFO  TomcatWebServer        - Tomcat started on port 8090 (http) with context path ''
-25-11-12.20:05:39.408 [main            ] INFO  Application            - Started Application in 2.813 seconds (process running for 3.544)
-25-11-12.20:06:02.585 [http-nio-8090-exec-1] INFO  [/]                    - Initializing Spring DispatcherServlet 'dispatcherServlet'
-25-11-12.20:06:02.585 [http-nio-8090-exec-1] INFO  DispatcherServlet      - Initializing Servlet 'dispatcherServlet'
-25-11-12.20:06:02.587 [http-nio-8090-exec-1] INFO  DispatcherServlet      - Completed initialization in 1 ms
-25-11-12.21:32:44.112 [main            ] INFO  Application            - Starting Application using Java 17.0.14 with PID 29892 (D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge\dev-tech-app\target\classes started by 晚风NEON in D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge)
-25-11-12.21:32:44.115 [main            ] INFO  Application            - The following 1 profile is active: "dev"
-25-11-12.21:32:44.698 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-25-11-12.21:32:44.701 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-25-11-12.21:32:44.726 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
-25-11-12.21:32:45.379 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port 8090 (http)
-25-11-12.21:32:45.389 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8090"]
-25-11-12.21:32:45.391 [main            ] INFO  StandardService        - Starting service [Tomcat]
-25-11-12.21:32:45.391 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/10.1.19]
-25-11-12.21:32:45.459 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
-25-11-12.21:32:45.459 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1311 ms
-25-11-12.21:32:46.081 [main            ] INFO  Version                - Redisson 3.44.0
-25-11-12.21:32:46.395 [redisson-netty-1-5] INFO  ConnectionsHolder      - 1 connections initialized for localhost/127.0.0.1:16379
-25-11-12.21:32:46.414 [redisson-netty-1-14] INFO  ConnectionsHolder      - 5 connections initialized for localhost/127.0.0.1:16379
-25-11-12.21:32:46.817 [main            ] INFO  HikariDataSource       - HikariCP - Starting...
-25-11-12.21:32:46.969 [main            ] INFO  HikariPool             - HikariCP - Added connection org.postgresql.jdbc.PgConnection@5a69b3cf
-25-11-12.21:32:46.970 [main            ] INFO  HikariDataSource       - HikariCP - Start completed.
-25-11-12.21:32:48.493 [main            ] INFO  Http11NioProtocol      - Starting ProtocolHandler ["http-nio-8090"]
-25-11-12.21:32:48.503 [main            ] INFO  TomcatWebServer        - Tomcat started on port 8090 (http) with context path ''
-25-11-12.21:32:48.511 [main            ] INFO  Application            - Started Application in 4.934 seconds (process running for 5.575)
-25-11-12.21:33:08.637 [http-nio-8090-exec-1] INFO  [/]                    - Initializing Spring DispatcherServlet 'dispatcherServlet'
-25-11-12.21:33:08.637 [http-nio-8090-exec-1] INFO  DispatcherServlet      - Initializing Servlet 'dispatcherServlet'
-25-11-12.21:33:08.638 [http-nio-8090-exec-1] INFO  DispatcherServlet      - Completed initialization in 1 ms
-25-11-12.21:37:34.239 [SpringApplicationShutdownHook] INFO  HikariDataSource       - HikariCP - Shutdown initiated...
-25-11-12.21:37:34.241 [SpringApplicationShutdownHook] INFO  HikariDataSource       - HikariCP - Shutdown completed.
+25-11-25.14:00:27.948 [main            ] INFO  Application            - Starting Application using Java 17.0.14 with PID 13076 (D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge\dev-tech-app\target\classes started by 晚风NEON in D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge)
+25-11-25.14:00:27.949 [main            ] INFO  Application            - The following 1 profile is active: "dev"
+25-11-25.14:00:28.676 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+25-11-25.14:00:28.679 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+25-11-25.14:00:28.712 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+25-11-25.14:00:29.360 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port 8090 (http)
+25-11-25.14:00:29.370 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8090"]
+25-11-25.14:00:29.372 [main            ] INFO  StandardService        - Starting service [Tomcat]
+25-11-25.14:00:29.372 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/10.1.19]
+25-11-25.14:00:29.444 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
+25-11-25.14:00:29.445 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1311 ms
+25-11-25.14:00:29.787 [main            ] INFO  HikariDataSource       - HikariCP - Starting...
+25-11-25.14:00:29.907 [main            ] INFO  HikariPool             - HikariCP - Added connection org.postgresql.jdbc.PgConnection@4a7db5a
+25-11-25.14:00:29.908 [main            ] INFO  HikariDataSource       - HikariCP - Start completed.
+25-11-25.14:00:32.378 [main            ] INFO  Version                - Redisson 3.44.0
+25-11-25.14:00:32.716 [redisson-netty-1-5] INFO  ConnectionsHolder      - 1 connections initialized for localhost/127.0.0.1:16379
+25-11-25.14:00:32.734 [redisson-netty-1-14] INFO  ConnectionsHolder      - 5 connections initialized for localhost/127.0.0.1:16379
+25-11-25.14:00:33.823 [main            ] INFO  Http11NioProtocol      - Starting ProtocolHandler ["http-nio-8090"]
+25-11-25.14:00:33.835 [main            ] INFO  TomcatWebServer        - Tomcat started on port 8090 (http) with context path ''
+25-11-25.14:00:33.848 [main            ] INFO  Application            - Started Application in 6.408 seconds (process running for 7.077)
+25-11-25.14:00:36.420 [http-nio-8090-exec-1] INFO  [/]                    - Initializing Spring DispatcherServlet 'dispatcherServlet'
+25-11-25.14:00:36.421 [http-nio-8090-exec-1] INFO  DispatcherServlet      - Initializing Servlet 'dispatcherServlet'
+25-11-25.14:00:36.422 [http-nio-8090-exec-1] INFO  DispatcherServlet      - Completed initialization in 1 ms
+25-11-25.14:02:30.508 [SpringApplicationShutdownHook] INFO  HikariDataSource       - HikariCP - Shutdown initiated...
+25-11-25.14:02:30.510 [SpringApplicationShutdownHook] INFO  HikariDataSource       - HikariCP - Shutdown completed.
