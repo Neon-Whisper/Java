@@ -1,0 +1,31 @@
+csdn:
+  api:
+    categories: Java基础学习
+    cookie: ${CSDN_API_COOKIE:UN=NEON_wf; uuid_tt_dd=10_37463564950-1734054865263-681383; FCNEC=%5B%5B%22AKsRol_EY_wr8yj-rPrUF4vMpkBy9vT7R09lGaqvHM22TEbRpOiXxtZ4o7OE4auaKhMC85Xzv4O7m2beqgOgnImUK_FDaRqqBgcPej5f5C5zgBvWdL3UiRLBnjszOrxYKDhNZ7e6kwLkMXDGA3jRwCIacLiTqXG26Q%3D%3D%22%5D%5D; Hm_ct_6bcd52f51e9b3dce32bec4a3997715ac=6525*1*10_37463564950-1734054865263-681383!5744*1*NEON_wf; c_dl_fref=https://so.csdn.net/so/search; ssxmod_itna2=QqRx0DBDRDcG5xBPGKiQ23BIoxxjxhuAddb2DA=WpND/DODFhERYIcLPAPKOZoNz+ah2tP2naObjxq9axOIhYz+erjoTf8LOI6uYB=OQkv/8zjUwW5kLFdkfvZ6RH2ipHWUUx2YWat6BqE/RotAKDPDKuGFD7=DeuDxD; ssxmod_itna=YqfxyD0GitD=7Lxlfx+rF=6PD5G=CKqDuQtCh40HPheGzDAxn4DaDHooy0hY=GWDrAWeiQ4w5=ECQ7aRKEBldP4f7m7qi8DCueboD44GTDt4DTD34DYDihQGyzqBQDjxAQDjAKGaDfwtDLxi7kEFPDBRY5+ikDQPDypPDIxD1=4wGDiI1DYv8Dim1D7HFDQI1t95D+gbvXxi36hDDBEG4DQe4s+9LXf5mT8oIkSOICIpA1/830=y1fxibkaSh6cC19ZfNi=0eZQD5bi03wWx5t7m5TQ04QiiYGjGepW24P7GgqCaNHGGDD==; c_ins_prid=-; c_ins_rid=1751623084544_737635; c_ins_fref=https://so.csdn.net/so/search; c_ins_fpage=/index.html; c_ins_um=-; ins_first_time=1751623095713; fid=20_76418248868-1760337631378-244709; c_adb=1; UserName=NEON_wf; UserInfo=0660d483c0944b6eaf8225fbe8084f8a; UserToken=0660d483c0944b6eaf8225fbe8084f8a; UserNick=%E6%99%9A%E9%A3%8ENEON; AU=4B5; BT=1760690578598; p_uid=U010000; csdn_newcert_NEON_wf=1; tfstk=gDhrL_cjhQdr-DsXNmFFuraKwIN8_W-6LXZQ-203PuquOLE3x2nYR6gH2k4E0owIFkNuxBoicDypykZ3YDgnFEO614389WqefCO_vOB1s0WutTY3oyUMlzmZNeSL9Wx6cG5HOuNKqPTX3W0DuyaCtkm3xiY4SPPhZJflniqY-WV3qzbcnPaFxTXltEu0DyV3xDVHuSqY-WqnxWDKVmiP6P2kuQuJ6t_gw8riro5i5jzo9T370GItgDezjWrVt6c4zqex1lfwdlDTVRwqmI1zTq4EvRhBX_EuQjHUIftFMq2TV7Gu_pIgjxnqWJcDj6zxuqDQLjtwg-GmyxwqHndsb7oUIb2V-e3quxVqLWJdjlDx0VenihfUkxo-gSGkRLFSCVGLIbAPXowT8DetOhC8qJjyLMUm9_cKUMXUErU4fE8VnvlpDrQ5YbXdp8pUulT889BLErCCUXTlp9eJyrr6liC..; c_dl_prid=1751605268560_494132; c_dl_rid=1761189292332_926471; c_dl_fpage=/download/qq_59957669/87911791; c_dl_um=distribute.pc_search_result.none-task-blog-2%7Eall%7Ebaidu_landing_v2%7Edefault-5-146123658-null-null.142%5Ev102%5Epc_search_result_base6; historyList-new=%5B%5D; dc_session_id=10_1764466537413.897621; c_first_ref=www.baidu.com; c_first_page=https%3A//blog.csdn.net/weixin_42132035/article/details/146266447; c_dsid=11_1764466540081.323491; c_segment=7; dc_sid=80e62395172529007fd281bc130ec2c9; c_pref=https%3A//www.baidu.com/; c_ref=https%3A//blog.csdn.net/weixin_42132035/article/details/146266447; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1763618960,1764037896,1764039882,1764466541; HMACCOUNT=68D66E0EA05653C3; is_advert=1; vip_auto_popup=1; _clck=1ehgfq8%5E2%5Eg1g%5E0%5E1589; log_Id_click=1; c_page_id=default; log_Id_pv=3; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1764466560; creative_popup=%7B%22arrowIcon%22%3A%22https%3A//i-operation.csdnimg.cn/images/ce16e44ad48a4f019e83ef26a48123cc.png%22%2C%22img%22%3A%22https%3A//i-operation.csdnimg.cn/images/4172809553fd4c84a67e7c244f203a3d.png%22%2C%22imgStyle%22%3A%22height%3A%2088px%3B%22%2C%22darkCfg%22%3A%7B%7D%2C%22role%22%3A%22lost%22%2C%22report%22%3A%7B%22spm%22%3A%223001.11122%22%2C%22extra%22%3A%22%22%7D%2C%22style%22%3A%22%22%2C%22arrowIconStyle%22%3A%22%22%2C%22url%22%3A%22https%3A//mall.csdn.net/vip%3Futm_source%3D251111_vip_blogtopbanner%22%2C%22newTab%22%3Afalse%2C%22userName%22%3A%22NEON_wf%22%7D; creative_btn_mp=1; log_Id_view=55; _clsk=7h7z21%5E1764466560615%5E2%5E0%5Ek.clarity.ms%2Fcollect; dc_tos=t6in43}
+
+spring:
+  application:
+    name: mcp-server-csdn
+
+  ai:
+    mcp:
+      server:
+        name: ${spring.application.name}
+        version: 1.0.0
+
+  main:
+    banner-mode: off
+    web-application-type: none
+
+logging:
+  pattern:
+    console:
+  file:
+    name: data/log/${spring.application.name}.log
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
