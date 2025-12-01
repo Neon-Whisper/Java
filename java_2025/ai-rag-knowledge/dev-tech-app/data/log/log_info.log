@@ -1,4 +1,4 @@
-25-11-14.20:46:11.733 [main            ] WARN  DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer - 
+25-12-01.18:27:31.405 [main            ] WARN  DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer - 
 
 Found multiple occurrences of org.json.JSONObject on the class path:
 
@@ -7,18 +7,18 @@ Found multiple occurrences of org.json.JSONObject on the class path:
 
 You may wish to exclude one of them to ensure predictable runtime behavior
 
-25-11-14.20:46:11.757 [main            ] INFO  RAGTest                - Starting RAGTest using Java 17.0.14 with PID 260876 (started by 晚风NEON in D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge\dev-tech-app)
-25-11-14.20:46:11.758 [main            ] INFO  RAGTest                - The following 1 profile is active: "dev"
-25-11-14.20:46:12.521 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-25-11-14.20:46:12.525 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-25-11-14.20:46:12.560 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 15 ms. Found 0 Redis repository interfaces.
-25-11-14.20:46:13.630 [main            ] INFO  HikariDataSource       - HikariCP - Starting...
-25-11-14.20:46:13.803 [main            ] INFO  HikariPool             - HikariCP - Added connection org.postgresql.jdbc.PgConnection@1e92a77d
-25-11-14.20:46:13.805 [main            ] INFO  HikariDataSource       - HikariCP - Start completed.
-25-11-14.20:46:15.734 [main            ] INFO  Version                - Redisson 3.44.0
-25-11-14.20:46:16.185 [redisson-netty-1-5] INFO  ConnectionsHolder      - 1 connections initialized for localhost/127.0.0.1:16379
-25-11-14.20:46:16.209 [redisson-netty-1-14] INFO  ConnectionsHolder      - 5 connections initialized for localhost/127.0.0.1:16379
-25-11-14.20:46:16.953 [main            ] INFO  RAGTest                - Started RAGTest in 5.729 seconds (process running for 6.984)
-25-11-14.20:46:28.358 [main            ] INFO  RAGTest                - 测试结果:{"metadata":{"promptMetadata":{},"rateLimit":{"requestsLimit":0,"requestsRemaining":0,"requestsReset":{"nano":0,"negative":false,"seconds":0,"units":["SECONDS","NANOS"],"zero":true},"tokensLimit":0,"tokensRemaining":0,"tokensReset":{"$ref":"$.metadata.rateLimit.requestsReset"}},"usage":{"generationTokens":0,"promptTokens":0,"totalTokens":0}},"result":{"metadata":{"contentFilterMetadata":{"generationTokens":146,"promptTokens":76,"totalTokens":222},"finishReason":"unknown"},"output":{"content":"<think>\n首先，我需要理解用户的问题和提供的信息。用户的询问是“王大瓜，哪年出生”，而 document section 提到了“王大瓜 1990年出生”。这意味着王大瓜的出生年份已经明确。\n\n接下来，我要根据这个信息回答用户的问题。根据提供的文档内容，“王大瓜 1990年出生”，因此可以得出王大瓜是1990年的出生人。\n\n最后，我需要用中文回答用户的查询，并使用“王大瓜”来作为代称。这样，我就能准确地回答用户的问题了。\n</think>\n\n王大瓜，哪年出生  \n王大瓜 1990年出生","media":[],"messageType":"ASSISTANT","properties":{}}},"results":[{"$ref":"$.metadata.rateLimit.result"}]}
-25-11-14.20:46:28.382 [SpringApplicationShutdownHook] INFO  HikariDataSource       - HikariCP - Shutdown initiated...
-25-11-14.20:46:28.384 [SpringApplicationShutdownHook] INFO  HikariDataSource       - HikariCP - Shutdown completed.
+25-12-01.18:27:31.424 [main            ] INFO  RAGTest                - Starting RAGTest using Java 17.0.14 with PID 59728 (started by 晚风NEON in D:\BaiduSyncdisk\code\java\java_2025\ai-rag-knowledge\dev-tech-app)
+25-12-01.18:27:31.425 [main            ] INFO  RAGTest                - The following 1 profile is active: "dev"
+25-12-01.18:27:32.354 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+25-12-01.18:27:32.359 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+25-12-01.18:27:32.391 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+25-12-01.18:27:33.344 [main            ] INFO  HikariDataSource       - HikariCP - Starting...
+25-12-01.18:27:33.490 [main            ] INFO  HikariPool             - HikariCP - Added connection org.postgresql.jdbc.PgConnection@29f3185c
+25-12-01.18:27:33.492 [main            ] INFO  HikariDataSource       - HikariCP - Start completed.
+25-12-01.18:27:35.640 [main            ] INFO  Version                - Redisson 3.44.0
+25-12-01.18:27:35.964 [redisson-netty-1-5] INFO  ConnectionsHolder      - 1 connections initialized for localhost/127.0.0.1:16379
+25-12-01.18:27:35.981 [redisson-netty-1-14] INFO  ConnectionsHolder      - 5 connections initialized for localhost/127.0.0.1:16379
+25-12-01.18:27:36.847 [main            ] INFO  RAGTest                - Started RAGTest in 5.916 seconds (process running for 6.992)
+25-12-01.18:27:55.296 [main            ] INFO  RAGTest                - 测试结果:{"metadata":{"promptMetadata":{},"rateLimit":{"requestsLimit":0,"requestsRemaining":0,"requestsReset":{"nano":0,"negative":false,"seconds":0,"units":["SECONDS","NANOS"],"zero":true},"tokensLimit":0,"tokensRemaining":0,"tokensReset":{"$ref":"$.metadata.rateLimit.requestsReset"}},"usage":{"generationTokens":0,"promptTokens":0,"totalTokens":0}},"result":{"metadata":{"contentFilterMetadata":{"generationTokens":28,"promptTokens":88,"totalTokens":116},"finishReason":"unknown"},"output":{"content":"根据提供的信息文档，我没有找到关于“王大瓜”出生年的具体资料。因此，我不确定他的出生年份。","media":[],"messageType":"ASSISTANT","properties":{}}},"results":[{"$ref":"$.metadata.rateLimit.result"}]}
+25-12-01.18:27:55.355 [SpringApplicationShutdownHook] INFO  HikariDataSource       - HikariCP - Shutdown initiated...
+25-12-01.18:27:55.359 [SpringApplicationShutdownHook] INFO  HikariDataSource       - HikariCP - Shutdown completed.

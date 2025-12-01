@@ -8,6 +8,7 @@ import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.ollama.OllamaEmbeddingModel;
 import org.springframework.ai.ollama.api.OllamaApi;
 import org.springframework.ai.ollama.api.OllamaOptions;
+import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.pgvector.PgVectorStore;
 import org.springframework.context.annotation.Bean;
@@ -45,4 +46,14 @@ public class OllamaConfig {
     }
 
 
+    @Bean
+    public ChatClient chatClient(OllamaChatModel ollamaChatModel, ToolCallbackProvider tools) {
+        DefaultChatClientBuilder defaultChatClientBuilder = new DefaultChatClientBuilder(ollamaChatModel, ObservationRegistry.NOOP, (ChatClientObservationConvention) null);
+        return defaultChatClientBuilder
+                .defaultTools(tools)
+                .defaultOptions(OllamaOptions.builder()
+                        .model("qwen2.5:7b")  // 可根据实际部署的模型名称进行调整
+                        .build())
+                .build();
+    }
 }
