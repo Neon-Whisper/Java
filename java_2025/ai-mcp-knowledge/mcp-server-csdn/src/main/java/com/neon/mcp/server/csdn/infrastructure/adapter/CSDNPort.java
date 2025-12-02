@@ -15,6 +15,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Slf4j
 @Component
@@ -28,8 +29,11 @@ public class CSDNPort implements ICSDNPort {
 
     @Override
     public ArticleFunctionResponse writeArticle(ArticleFunctionRequest request) throws IOException {
+        log.info("CSDNPort.writeArticle 被调用，请求参数: {}", JSON.toJSONString(request));
+        System.out.println("CSDNPort.writeArticle 被调用，请求参数: " + JSON.toJSONString(request));
 
         ArticleRequestDTO articleRequestDTO = new ArticleRequestDTO();
+        // 必需字段
         articleRequestDTO.setTitle(request.getTitle());
         articleRequestDTO.setMarkdowncontent(request.getMarkdowncontent());
         articleRequestDTO.setContent(request.getContent());
@@ -37,13 +41,30 @@ public class CSDNPort implements ICSDNPort {
         articleRequestDTO.setDescription(request.getDescription());
         articleRequestDTO.setCategories(csdnApiProperties.getCategories());
 
+        // 补充其他字段确保完整性
+        articleRequestDTO.setReadType("public");
+        articleRequestDTO.setLevel("0");
+        articleRequestDTO.setStatus(0);
+        articleRequestDTO.setType("original");
+        articleRequestDTO.setOriginal_link("");
+        articleRequestDTO.setAuthorized_status(true);
+        articleRequestDTO.setResource_url("");
+        articleRequestDTO.setNot_auto_saved("0");
+        articleRequestDTO.setSource("pc_mdeditor");
+        articleRequestDTO.setCover_images(Collections.emptyList());
+        articleRequestDTO.setCover_type(0);
+        articleRequestDTO.setIs_new(1);
+        articleRequestDTO.setVote_id(0);
+        articleRequestDTO.setResource_id("");
+        articleRequestDTO.setPubStatus("draft");
+        articleRequestDTO.setSync_git_code(0);
+
         Call<ArticleResponseDTO> call = csdnService.saveArticle(articleRequestDTO);
         Response<ArticleResponseDTO> response = call.execute();
         if (!response.isSuccessful()) {
-            // 关键代码：读取完整 errorBody
             String errorBody = response.errorBody().string();
-            System.out.println("完整错误响应：" + errorBody); // 控制台打印
-            // 或断点停在这里，查看 errorBody 变量的完整值
+            System.out.println("完整错误响应：" + errorBody);
+            log.error("CSDN API调用失败，HTTP状态码: {}, 错误信息: {}", response.code(), errorBody);
         }
         log.info("请求CSDN发帖 \nreq:{} \nres:{}", JSON.toJSONString(articleRequestDTO), JSON.toJSONString(response));
 

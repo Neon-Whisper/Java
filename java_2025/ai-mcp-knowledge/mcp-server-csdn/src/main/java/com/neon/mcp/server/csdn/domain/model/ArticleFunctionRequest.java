@@ -22,7 +22,7 @@ public class ArticleFunctionRequest {
     @JsonPropertyDescription("文章标签，英文逗号隔开")
     private String tags;
 
-    @JsonProperty(required = true, value = "Description")
+    @JsonProperty(required = true, value = "Description") // 保持首字母大写
     @JsonPropertyDescription("文章简述")
     private String Description;
 

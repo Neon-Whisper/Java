@@ -1,12 +1,14 @@
 {
   "mcpServers": {
     "filesystem": {
-      "command": "npx",
+      "command": "cmd",
       "args": [
+        "/c",
+        "npx",
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/Users/fuzhengwei/Desktop",
-        "/Users/fuzhengwei/Desktop"
+        "D:\\BaiduSyncdisk\\code\\java\\java_2025\\ai-mcp-knowledge\\mcp-test",
+        "D:\\BaiduSyncdisk\\code\\java\\java_2025\\ai-mcp-knowledge\\mcp-test"
       ]
     },
     "mcp-server-computer": {
@@ -14,7 +16,17 @@
       "args": [
         "-Dspring.ai.mcp.server.stdio=true",
         "-jar",
-        "/Users/fuzhengwei/Applications/apache-maven-3.8.4/repositoryp/mcp-server-computer/1.0.0/mcp-server-computer-1.0.0.jar"
+        "D:\\BaiduSyncdisk\\code\\java\\java_2025\\ai-mcp-knowledge\\mcp-server-computer\\target\\mcp-server-computer-1.0.0.jar"
+      ]
+    },
+    "mcp-server-csdn": {
+      "command": "java",
+      "args": [
+        "-Dspring.ai.mcp.server.stdio=true",
+        "-jar",
+        "D:\\BaiduSyncdisk\\code\\java\\java_2025\\ai-mcp-knowledge\\mcp-server-csdn\\target\\mcp-server-csdn-1.0.0.jar",
+        "--csdn.api.categories=Java场景面试宝典",
+        "--csdn.api.cookie=dc_sid=4f39db19db5e07b3712c8252f5192a49填写你的cookie"
       ]
     }
   }
