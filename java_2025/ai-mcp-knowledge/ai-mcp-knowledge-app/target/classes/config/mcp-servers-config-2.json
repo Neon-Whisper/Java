@@ -28,6 +28,14 @@
         "--csdn.api.categories=Java场景面试宝典",
         "--csdn.api.cookie=dc_sid=4f39db19db5e07b3712c8252f5192a49填写你的cookie"
       ]
+    },
+    "mcp-server-weixin": {
+      "command": "java",
+      "args": [
+        "-Dspring.ai.mcp.server.stdio=true",
+        "-jar",
+        "D:\\BaiduSyncdisk\\code\\java\\java_2025\\ai-mcp-knowledge\\mcp-server-weixin\\target\\mcp-server-weixin-1.0.0.jar"
+      ]
     }
   }
 }
