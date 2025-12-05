@@ -13,6 +13,7 @@
         <module>mcp-server-computer</module>
         <module>mcp-server-csdn</module>
         <module>ai-mcp-knowledge-trigger</module>
+        <module>mcp-server-weixin</module>
     </modules>
 
     <properties>

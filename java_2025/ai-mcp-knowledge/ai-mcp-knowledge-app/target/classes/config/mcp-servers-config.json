@@ -29,6 +29,15 @@
         "D:\\BaiduSyncdisk\\code\\java\\java_2025\\ai-mcp-knowledge\\mcp-test",
         "D:\\BaiduSyncdisk\\code\\java\\java_2025\\ai-mcp-knowledge\\mcp-test"
       ]
+    },
+    "mcp-server-weixin": {
+      "command": "java",
+      "args": [
+        "-Dfile.encoding=utf-8",
+        "-Dspring.ai.mcp.server.stdio=true",
+        "-jar",
+        "D:\\BaiduSyncdisk\\code\\java\\java_2025\\ai-mcp-knowledge\\mcp-server-weixin\\target\\mcp-server-weixin-1.0.0.jar"
+      ]
     }
   }
 }
