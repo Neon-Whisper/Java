@@ -1,7 +1,0 @@
-2025-12-05T19:15:25.154+08:00  INFO 83564 --- [mcp-server-weixin] [main] c.n.m.s.weixin.McpServerApplication      : Starting McpServerApplication v1.0.0 using Java 17.0.14 with PID 83564 (D:\BaiduSyncdisk\code\java\java_2025\ai-mcp-knowledge\mcp-server-weixin\target\mcp-server-weixin-1.0.0.jar started by 晚风NEON in D:\BaiduSyncdisk\code\java\java_2025\ai-mcp-knowledge)
-2025-12-05T19:15:25.160+08:00  INFO 83564 --- [mcp-server-weixin] [main] c.n.m.s.weixin.McpServerApplication      : No active profile set, falling back to 1 default profile: "default"
-2025-12-05T19:15:26.757+08:00  INFO 83564 --- [mcp-server-weixin] [main] o.s.a.a.m.s.MpcServerAutoConfiguration   : Registered tools1 notification: true
-2025-12-05T19:15:26.846+08:00  INFO 83564 --- [mcp-server-weixin] [pool-2-thread-1] i.m.server.McpAsyncServer                : Client initialize request - Protocol: 2024-11-05, Capabilities: ClientCapabilities[experimental=null, roots=null, sampling=null], Info: Implementation[name=spring-ai-mcp-client, version=1.0.0]
-2025-12-05T19:15:26.991+08:00  INFO 83564 --- [mcp-server-weixin] [main] c.n.m.s.weixin.McpServerApplication      : Started McpServerApplication in 2.459 seconds (process running for 2.931)
-2025-12-05T19:15:26.996+08:00  INFO 83564 --- [mcp-server-weixin] [main] c.n.m.s.weixin.McpServerApplication      : check properties ...
-2025-12-05T19:15:26.996+08:00  INFO 83564 --- [mcp-server-weixin] [main] c.n.m.s.weixin.McpServerApplication      : weixin properties key wxbca5cd4fc837f750

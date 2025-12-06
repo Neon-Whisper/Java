@@ -38,3 +38,8 @@ build/
 .DS_Store
 /data/
 /.idea/
+
+# 忽略敏感配置文件
+src/main/resources/application.yml
+src/main/resources/application-*.yml
+!src/main/resources/application-template.yml
